@@ -1,0 +1,13 @@
+---
+# compose to spin up a development postgresql database
+services:
+  db:
+    image: postgres:16.3-alpine3.20
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kanbanpwd}
+      POSTGRES_USER: ${POSTGRES_USER:-kanbanusr}
+      POSTGRES_DB: ${POSTGRES_DB:-kanbandb}
+    volumes:
+      - ./initial-state.sql:/docker-entrypoint-initdb.d/init.sql

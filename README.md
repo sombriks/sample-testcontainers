@@ -82,6 +82,10 @@ _some sample code_
 
 ## Conclusion
 
-Now that your boundaries got extended your confidence on the code grows more and
-more. It does what it's supposed to do. It saves and list the expected content.
-It works*.
+Now that your boundaries got extended, your confidence on the code grows more
+and more. It does what it's supposed to do. It saves and list the expected
+content. It works*. As far as the tests can tell.
+
+The complete source code can be found here.
+
+Happy hacking!
