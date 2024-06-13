@@ -1,20 +1,21 @@
 # Sample Testcontainers
 
-Samples on why and how to use testcontainers
+Samples on why and how to use [TestContainers][testcontainers]
 
 ## Test Boundaries
 
-Untested code is a dark jungle filled with unknown bugs. We write tests to light
-up a fire to keep unexpected problems away.
+Untested code is a dark jungle filled with unknown bugs. 
+
+We write tests to light up a fire to keep unexpected problems away.
 
 But how far should a test suite should go?
 
 It's clear that any business-specific code must be covered with tests, but does
 a 3rd party API endpoint should be tested too? And the database?
 
-There are frontiers. Anything out of your control can not be properly tested.
+There are frontiers. Anything out of our control can not be properly tested.
 
-And this is the crossroads: expand your control or mock boundaries.
+And this is the crossroads: expand our control or mock boundaries.
 
 ## The problem with too much mocks
 
@@ -24,17 +25,38 @@ front page project, _don't mock everything_.
 For example, this mock looks perfectly reasonable:
 
 ```kotlin
- // mock to insert data - ok
+// mock to list data - ok
+@BeforeEach
+fun setup() {
+    _when(
+        personRepository.findByNameContainingIgnoreCase(
+            anyString(), anyOrNull()
+        )
+    ).thenReturn(personPage)
+}
+
+@Test
+fun `should list people`() {
+    val result = boardService.listPeople("", pageable)
+    assertThat(result, notNullValue())
+}
 ```
 
 But then:
 
 ```kotlin
-// mock to list after insert - fail
+// mock to insert - fail
+@Test
+@Disabled("We can keep mocking but we don't trust the test anymore")
+fun `should save people`() {
+    val person = Person(name = "Ferdinando")
+    boardService.savePerson(person)
+    assertThat(person.id, notNullValue())
+}
 ```
 
-In this situation you can simply keep growing mock surface but there will be a
-point when you will be testing nothing at all.
+In this situation you can simply keep growing the mock surface but there will be
+a point when you will be testing nothing at all.
 
 To really solve it, your boundaries must expand. And if the boundary to expand
 is the database, here goes some samples.
@@ -45,8 +67,8 @@ One way to mock the database is to use some lightweight database runtime like h2
 or sqlite, but that comes with a price: the dialect might be different from the
 real deal.
 
-To proper avoid that, it's ideal to use same RDBMS for development, staging and
-for testing.
+To properly avoid that, it's ideal to use same RDBMS for development, staging
+and for testing.
 
 Using TestContainers makes this task a real breeze.
 
@@ -96,3 +118,5 @@ content. It works*. As far as the tests can tell.
 The complete source code can be found here.
 
 Happy hacking!
+
+[testcontainers]: https://testcontainers.com/
