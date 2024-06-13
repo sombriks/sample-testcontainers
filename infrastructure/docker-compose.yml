@@ -9,5 +9,6 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kanbanpwd}
       POSTGRES_USER: ${POSTGRES_USER:-kanbanusr}
       POSTGRES_DB: ${POSTGRES_DB:-kanbandb}
+      PGSSLMODE: disable
     volumes:
-      - ./initial-state.sql:/docker-entrypoint-initdb.d/init.sql
+      - ../sample-kanban-jvm/src/test/resources/initial-state.sql:/docker-entrypoint-initdb.d/init.sql

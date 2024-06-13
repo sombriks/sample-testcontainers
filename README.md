@@ -80,6 +80,13 @@ database runtime.
 
 _some sample code_
 
+## CI/CD integration
+
+Now the best part: most CI/CD infrastructure available out there will offer
+docker runtimes, so your tests will run smoothly.
+
+_some sample code_
+
 ## Conclusion
 
 Now that your boundaries got extended, your confidence on the code grows more
