@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html th:fragment="main (title, head, content, footer)" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:replace="${title}">Simple Kanban</title>
+    <link rel="stylesheet" th:href="@{/webjars/bulma/1.0.1/css/bulma.css}"/>
+    <script type="application/javascript" th:src="@{/webjars/htmx.org/2.0.0-beta4/dist/htmx.js}"></script>
+    <th:block th:replace="${head}"/>
+</head>
+<body>
+    <th:block th:replace="${content}"/>
+    <th:block th:replace="${footer}"/>
+</body>
+</html>

@@ -24,7 +24,11 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+	runtimeOnly("org.webjars.npm:bulma:1.0.1")
+	runtimeOnly("org.webjars.npm:htmx.org:2.0.0-beta4")
 	runtimeOnly("org.postgresql:postgresql")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
@@ -32,6 +36,7 @@ dependencies {
 	testImplementation("org.testcontainers:postgresql")
 	testImplementation("org.hamcrest:hamcrest:2.2")
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
+
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
