@@ -13,4 +13,18 @@ data class Person(
     @Column(updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     var created: LocalDateTime? = null
-)
+) {
+    companion object {
+        fun fromCookie(info: String): Person {
+            val person = Person()
+            info.split("&").forEach {
+                val (key, value) = it.split("=")
+                when(key) {
+                    "id" -> person.id = value.toLong()
+                    "name" -> person.name = value
+                }
+            }
+            return person
+        }
+    }
+}

@@ -24,6 +24,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.0")
+
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
 	runtimeOnly("org.webjars.npm:bulma:1.0.1")
 	runtimeOnly("org.webjars.npm:htmx.org:2.0.0-beta4")

@@ -1,13 +1,27 @@
 <!DOCTYPE html>
-<html th:fragment="main (title, head, content, footer)" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <title th:replace="${title}">Simple Kanban</title>
-    <link rel="stylesheet" th:href="@{/webjars/bulma/1.0.1/css/bulma.css}"/>
-    <script type="application/javascript" th:src="@{/webjars/htmx.org/2.0.0-beta4/dist/htmx.js}"></script>
-    <th:block th:replace="${head}"/>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Simple Kanban</title>
+    <link rel="stylesheet"
+          th:href="@{/webjars/bulma/1.0.1/css/bulma.css}"/>
+    <script type="application/javascript"
+            th:src="@{/webjars/htmx.org/2.0.0-beta4/dist/htmx.js}"></script>
+    <th:block layout:fragment="head"/>
 </head>
 <body>
-    <th:block th:replace="${content}"/>
-    <th:block th:replace="${footer}"/>
+<div class="container is-max-widescreen">
+    <nav th:if="${user} != null">
+        <a th:href="@{/logout}">Logout</a>
+        <a th:href="@{/board}">Board</a>
+        <a th:href="@{/table}">Table</a>
+    </nav>
+    <section class="section is-medium">
+        <th:block layout:fragment="content"/>
+    </section>
+</div>
+<footer class="footer">
+    <th:block layout:fragment="footer"/>
+</footer>
 </body>
 </html>

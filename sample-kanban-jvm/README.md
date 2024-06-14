@@ -42,8 +42,17 @@ Or:
   for the database using the regular configuration instead of the TestContainer.
 - Mockito still present issues with kotlin. The `mockito-kotlin` dependency is
   there just to solve that.
+- The [layout dialect for thymeleaf][layout]
+  delivers important feature on view design which, in my opinion, should be part
+  of the main thing.
+- LiveReload looks like a forgotten art. On eclipse, it just was there, working.
+  But with [some research][thm-live-reload] and
+  [proper configuration][dev-profile], it can be somewhat restored.
 
 [testcontainers]: https://testcontainers.com/
 [infrastructure]: ../infrastructure/docker-compose.yml
 [initializr]: <https://start.spring.io/#!type=gradle-project-kotlin&language=kotlin&platformVersion=3.3.0&packaging=jar&jvmVersion=17&groupId=sample.testcontainer&artifactId=kanban&name=sample-kanban-jvm&description=Demo%20project%20for%20Spring%20Boot%2C%20Kotlin%20and%20TestContainers&packageName=sample.testcontainer.kanban&dependencies=web,testcontainers,postgresql,thymeleaf,data-jpa>
 [spring-config-import]: ./src/test/kotlin/sample/testcontainer/kanban/services/BoardServiceTestWithTestContainers.kt
+[layout]: https://ultraq.github.io/thymeleaf-layout-dialect/getting-started/
+[thm-live-reload]: https://attacomsian.com/blog/spring-boot-auto-reload-thymeleaf-templates
+[dev-profile]: ./src/main/resources/application-dev.properties

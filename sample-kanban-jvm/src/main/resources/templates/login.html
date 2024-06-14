@@ -1,9 +1,34 @@
-<th:block th:replace="~{layout/main :: main (
-    title = ~{::title},
-    head = _,
-    content = _,
-    footer = _)}"
-          xmlns:th="http://www.thymeleaf.org">
-    <!-- see details in https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#layout-inheritance -->
-    <title>Simple Kanban - Login</title>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="@{/layout/main.html}">
+<head>
+    <title>Login</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="box -is-mobile is-centered columns">
+        <div class="column is-half">
+            <form class="card" th:action="@{/login}" method="post">
+                <header class="card-header block">
+                    <h1 class="title">Login</h1>
+                </header>
+                <section class="card-content block">
+                    <div class="field">
+                        <label for="userId" class="label">Pick an user</label>
+                        <div class="control select is-primary">
+                            <select id="userId" name="userId">
+                                <option th:each="user : ${users}" th:text="${user.name}" th:value="${user.id}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+                <footer class="card-footer block">
+                    <button class="button is-primary" type="submit">Pick this user</button>
+                </footer>
+            </form>
+        </div>
+    </div>
 </th:block>
+</body>
+</html>
