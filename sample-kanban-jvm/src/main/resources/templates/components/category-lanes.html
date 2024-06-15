@@ -6,13 +6,13 @@
         </header>
         <div class="card-content is-flex-grow-1 status"
              th:id="'status'+${status.id}"
-             th:value="${status.id}"
+             th:data-status="${status.id}"
              @dragover.prevent
              @drop="e => {
                 const taskId = e.dataTransfer.getData('text/plain')
                 const taskEl = document.getElementById(taskId)
                 $el.appendChild(taskEl)
-                $dispatch('updateStatus', {taskEl, lane: $el})
+                $dispatch('update-status', {taskEl, lane: $el})
              }">
             <!--/* tasks var came from controller model setup */-->
             <th:block th:each="task : ${tasks}">

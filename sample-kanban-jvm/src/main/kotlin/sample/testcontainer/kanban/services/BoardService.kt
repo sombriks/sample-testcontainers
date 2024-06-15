@@ -9,6 +9,7 @@ import sample.testcontainer.kanban.models.Message
 import sample.testcontainer.kanban.models.Person
 import sample.testcontainer.kanban.models.Status
 import sample.testcontainer.kanban.models.Task
+import sample.testcontainer.kanban.models.to.TaskStatusTO
 import sample.testcontainer.kanban.repositories.MessageRepository
 import sample.testcontainer.kanban.repositories.PersonRepository
 import sample.testcontainer.kanban.repositories.StatusRepository
@@ -47,22 +48,34 @@ class BoardService(
         return personRepository.findByIdOrNull(id)
     }
 
+    fun findStatus(id: Long): Status? {
+        return statusRepository.findByIdOrNull(id)
+    }
+
     fun findTask(id: Long): Task? {
         return taskRepository.findByIdOrNull(id)
     }
 
     fun saveMessage(message: Message) {
-        if(message.id == null) message.created = LocalDateTime.now()
+        if (message.id == null) message.created = LocalDateTime.now()
         messageRepository.save(message)
     }
 
     fun savePerson(person: Person) {
-        if(person.id == null) person.created = LocalDateTime.now()
+        if (person.id == null) person.created = LocalDateTime.now()
         personRepository.save(person)
     }
 
     fun saveTask(task: Task) {
-        if(task.id == null) task.created = LocalDateTime.now()
+        if (task.id == null) task.created = LocalDateTime.now()
         taskRepository.save(task)
+    }
+
+    fun updateTaskStatus(data: TaskStatusTO): Task {
+        val task = findTask(data.task!!)!!
+        val status = findStatus(data.status!!)!!
+        task.status = status
+        saveTask(task)
+        return task
     }
 }

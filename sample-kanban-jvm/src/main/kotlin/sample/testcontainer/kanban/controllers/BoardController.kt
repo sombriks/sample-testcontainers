@@ -8,11 +8,9 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
-import org.springframework.web.bind.annotation.CookieValue
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
 import sample.testcontainer.kanban.models.Person
+import sample.testcontainer.kanban.models.to.TaskStatusTO
 import sample.testcontainer.kanban.services.BoardService
 
 @Controller
@@ -78,5 +76,20 @@ class BoardController(private val boardService: BoardService) {
         model.set("statuses", boardService.listStatuses())
         model.set("tasks", boardService.listTasks("", PageRequest.ofSize(100)).content)
         return "pages/table"
+    }
+
+    @PutMapping("task/{id}")
+    fun updateTask(
+        model: Model,
+        @CookieValue("x-user-info") info: String?,
+        @PathVariable id: Long,
+        data: TaskStatusTO,
+    ): String {
+        logger.info("updateTask")
+        if (info == null) return "redirect:/logout"
+        model.set("user", Person.fromCookie(info))
+        if (id != data.task) return "redirect:/error"
+        model.set("task", boardService.updateTaskStatus(data))
+        return "components/task-card"
     }
 }

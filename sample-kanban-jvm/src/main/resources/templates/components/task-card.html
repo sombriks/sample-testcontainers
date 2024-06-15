@@ -1,9 +1,18 @@
 <article class="message task"
          th:id="'task'+${task.id}"
-         th:value="${task.id}"
+         th:data-task="${task.id}"
+         th:data-status="${task.status.id}"
+         th:hx-put="@{/task/{id}(id=${task.id})}"
+         hx-ext="hx-dataset-include"
+         hx-trigger="put-task"
          draggable="true"
-         @dragstart="e => e.dataTransfer.setData('text/plain', e.target.id)"
-         @updateStatus="console.log">
+         @dragstart="e => e.dataTransfer.setData('text/plain', $el.id)"
+         @update-status.window="e => {
+            if(e.detail.taskEl == $el) { // needed to filter real target
+                $el.dataset.status=e.detail.lane.dataset.status
+                $dispatch('put-task', $el.dataset)
+            }
+         }">
     <div class="message-header">
         #[[${task.id}]] - [[${task.description}]]
     </div>
