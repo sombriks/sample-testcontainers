@@ -32,7 +32,7 @@ class BoardController(private val boardService: BoardService) {
         logger.info("login")
         // it's just an example
         model.set("users", boardService.listPeople("", PageRequest.ofSize(10)).content)
-        return "login"
+        return "pages/login"
     }
 
     @PostMapping("login")
@@ -63,7 +63,10 @@ class BoardController(private val boardService: BoardService) {
         if (info == null) return "redirect:/logout"
         // TODO consider use https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/sessionattribute.html
         model.set("user", Person.fromCookie(info))
-        return "board"
+        model.set("people", boardService.listPeople("", PageRequest.ofSize(10)).content)
+        model.set("statuses", boardService.listStatuses())
+        model.set("tasks", boardService.listTasks("", PageRequest.ofSize(100)).content)
+        return "pages/board"
     }
 
     @GetMapping("table")
@@ -71,6 +74,9 @@ class BoardController(private val boardService: BoardService) {
         logger.info("table")
         if (info == null) return "redirect:/logout"
         model.set("user", Person.fromCookie(info))
-        return "table"
+        model.set("people", boardService.listPeople("", PageRequest.ofSize(10)).content)
+        model.set("statuses", boardService.listStatuses())
+        model.set("tasks", boardService.listTasks("", PageRequest.ofSize(100)).content)
+        return "pages/table"
     }
 }

@@ -1,0 +1,20 @@
+<div class="cell is-flex">
+    <section class="card is-flex is-flex-grow-1 is-flex-direction-column">
+        <header class="card-header">
+            <!--/* status var came from parent th:with */-->
+            <h1 class="card-header-title">[[${status.description}]]</h1>
+        </header>
+        <div class="card-content is-flex-grow-1">
+            <!--/* tasks var came from controller model setup */-->
+            <th:block th:each="task : ${tasks}">
+                <th:block th:if="${task.status.id} eq ${status.id}">
+                    <th:block th:replace="~{/components/task-card}"
+                              th:with="task=${task},status=${status}"></th:block>
+                </th:block>
+            </th:block>
+        </div>
+        <div class="card-footer">
+
+        </div>
+    </section>
+</div>

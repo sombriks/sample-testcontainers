@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="@{/layouts/main.html}">
+<head>
+    <title>Board</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <h1>Welcome to the board, <span th:text="${user.name}"></span></h1>
+    <div th:class="'fixed-grid has-'+${statuses.size()}+'-cols'">
+        <div class="grid">
+            <th:block th:each="status : ${statuses}">
+                <th:block th:with="status=${status}" th:replace="~{/components/category-lanes}"></th:block>
+            </th:block>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

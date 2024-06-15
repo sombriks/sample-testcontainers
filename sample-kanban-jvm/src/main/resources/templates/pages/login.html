@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="@{/layout/main.html}">
+      layout:decorate="@{/layouts/main.html}">
 <head>
     <title>Login</title>
 </head>
 <body>
 <th:block layout:fragment="content">
-    <div class="box -is-mobile is-centered columns">
+    <div class="is-mobile is-centered columns">
         <div class="column is-half">
             <form class="card" th:action="@{/login}" method="post">
-                <header class="card-header block">
-                    <h1 class="title">Login</h1>
+                <header class="card-header">
+                    <h1 class="card-header-title title">Login</h1>
                 </header>
-                <section class="card-content block">
+                <section class="card-content">
                     <div class="field">
-                        <label for="userId" class="label">Pick an user</label>
-                        <div class="control select is-primary">
+                        <label class="label" for="userId">Pick an user</label>
+                        <div class="control select is-primary is-fullwidth">
                             <select id="userId" name="userId">
                                 <option th:each="user : ${users}" th:text="${user.name}" th:value="${user.id}"></option>
                             </select>
                         </div>
                     </div>
                 </section>
-                <footer class="card-footer block">
-                    <button class="button is-primary" type="submit">Pick this user</button>
+                <footer class="card-footer">
+                    <button class="button is-primary card-footer-item m-1" type="submit">Pick this user</button>
                 </footer>
             </form>
         </div>

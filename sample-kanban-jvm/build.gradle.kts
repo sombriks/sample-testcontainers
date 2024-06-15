@@ -29,7 +29,9 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
 	runtimeOnly("org.webjars.npm:bulma:1.0.1")
+	runtimeOnly("org.webjars.npm:alpinejs:3.14.0")
 	runtimeOnly("org.webjars.npm:htmx.org:2.0.0-beta4")
+
 	runtimeOnly("org.postgresql:postgresql")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

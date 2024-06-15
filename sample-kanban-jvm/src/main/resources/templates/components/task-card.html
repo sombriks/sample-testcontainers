@@ -1,0 +1,12 @@
+<article class="message">
+    <div class="message-header">
+        [[${task.id}]] [[${task.description}]]
+    </div>
+    <div class="message-body">
+        <!--/*
+            task and status can either come from parent componente or from the
+            dedicated component controller
+        */-->
+        [[${task.status.id}]] [[${status.id}]]
+    </div>
+</article>
