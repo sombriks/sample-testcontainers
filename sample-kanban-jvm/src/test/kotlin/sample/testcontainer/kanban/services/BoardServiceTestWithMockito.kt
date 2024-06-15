@@ -52,6 +52,6 @@ class BoardServiceTestWithMockito {
     fun `should save people`() {
         val person = Person(name = "Ferdinando")
         boardService.savePerson(person)
-        assertThat(person.id, notNullValue())
+        assertThat(person.id, notNullValue()) //new person should have an id now
     }
 }

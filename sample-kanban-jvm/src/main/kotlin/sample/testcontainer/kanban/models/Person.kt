@@ -12,14 +12,23 @@ data class Person(
     var name: String? = null,
     @Column(updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    var created: LocalDateTime? = null
+    var created: LocalDateTime? = null,
+    @ManyToMany
+    @JoinTable(
+        schema = "kanban",
+        name = "task_person",
+        joinColumns = [JoinColumn(name = "person_id")],
+        inverseJoinColumns = [JoinColumn(name = "task_id")]
+    )
+    @OrderBy("created desc")
+    var tasks: MutableList<Task>? = null,
 ) {
     companion object {
         fun fromCookie(info: String): Person {
             val person = Person()
             info.split("&").forEach {
                 val (key, value) = it.split("=")
-                when(key) {
+                when (key) {
                     "id" -> person.id = value.toLong()
                     "name" -> person.name = value
                 }

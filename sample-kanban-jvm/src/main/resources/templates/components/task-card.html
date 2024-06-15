@@ -1,12 +1,17 @@
-<article class="message">
+<article class="message task"
+         th:id="'task'+${task.id}"
+         th:value="${task.id}"
+         draggable="true"
+         @dragstart="e => e.dataTransfer.setData('text/plain', e.target.id)"
+         @updateStatus="console.log">
     <div class="message-header">
-        [[${task.id}]] [[${task.description}]]
+        #[[${task.id}]] - [[${task.description}]]
     </div>
     <div class="message-body">
         <!--/*
             task and status can either come from parent componente or from the
             dedicated component controller
         */-->
-        [[${task.status.id}]] [[${status.id}]]
+        [[${task.messages.size()}]] msg, [[${task.people.size()}]] ppl
     </div>
 </article>

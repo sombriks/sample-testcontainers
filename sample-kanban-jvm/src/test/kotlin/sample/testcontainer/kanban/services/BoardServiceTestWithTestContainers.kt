@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.transaction.annotation.Transactional
 import sample.testcontainer.kanban.TestcontainersConfiguration
 import sample.testcontainer.kanban.models.Message
+import sample.testcontainer.kanban.repositories.PersonRepository
 import kotlin.test.assertNotNull
 
 @SpringBootTest
@@ -19,6 +20,9 @@ class BoardServiceTestWithTestContainers {
 
     @Autowired
     private lateinit var boardService: BoardService
+
+    @Autowired
+    private lateinit var personRepository: PersonRepository
 
     @Test
     fun `should list messages`() {
@@ -66,10 +70,25 @@ class BoardServiceTestWithTestContainers {
         boardService.saveMessage(message)
         assertThat(message.id, notNullValue())
 
-        val result = boardService.findTask(1)?.messages
+        val (result) = boardService.findTask(1)?.messages!!
         assertThat(result, notNullValue())
-        assertThat(result?.first()?.id, notNullValue())
-        assertThat(result?.first()?.content, equalTo("How is it going?"))
+        assertThat(result.id, notNullValue())
+        assertThat(result.content, equalTo("How is it going?"))
+    }
 
+    @Test
+    @Transactional
+    fun `should add person to task`() {
+        val person = boardService.findPerson(5)!! // person with no tasks
+        val task = boardService.findTask(2)!!
+        task.people?.add(person)
+        boardService.saveTask(task)
+
+        personRepository.flush() // can't wait transaction end
+
+        val (result) = boardService.findPerson(5)?.tasks!!
+        assertThat(result, notNullValue())
+        assertThat(result.id, notNullValue())
+        assertThat(result, equalTo(task))
     }
 }

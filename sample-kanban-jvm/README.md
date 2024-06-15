@@ -5,8 +5,14 @@ purposes using [TestContainers][testcontainers]
 
 ## Dependencies
 
-- java 17
-- docker 25
+- [java 17][java]
+- [docker 25][docker]
+- [spring boot 3][spring-boot]
+- [thymeleaf 3][thymeleaf]
+- [bulma 1][bulma] (via [webjars][webjars])
+- [htmx 2][htmx] (via webjars)
+- [alpinejs 3][alpinejs] (via webjars)
+- and of course [TestContainers 1.19][testcontainers]
 
 ## How to build
 
@@ -48,11 +54,21 @@ Or:
 - LiveReload looks like a forgotten art. On eclipse, it just was there, working.
   But with [some research][thm-live-reload] and
   [proper configuration][dev-profile], it can be somewhat restored.
+- [Alpine.js][alpinejs] remembers the simplicity of original Angular.js, but it's much more
+  like Vue.js. That's a good thing.
 
 [testcontainers]: https://testcontainers.com/
+[java]: https://dev.java/download/
+[docker]: https://docs.docker.com/engine/install/
+[spring-boot]: https://spring.io/projects/spring-boot
+[thymeleaf]: https://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html
+[bulma]: https://bulma.io/documentation/
+[webjars]: https://www.webjars.org/
+[htmx]: https://htmx.org/docs/#introduction
 [infrastructure]: ../infrastructure/docker-compose.yml
 [initializr]: <https://start.spring.io/#!type=gradle-project-kotlin&language=kotlin&platformVersion=3.3.0&packaging=jar&jvmVersion=17&groupId=sample.testcontainer&artifactId=kanban&name=sample-kanban-jvm&description=Demo%20project%20for%20Spring%20Boot%2C%20Kotlin%20and%20TestContainers&packageName=sample.testcontainer.kanban&dependencies=web,testcontainers,postgresql,thymeleaf,data-jpa>
 [spring-config-import]: ./src/test/kotlin/sample/testcontainer/kanban/services/BoardServiceTestWithTestContainers.kt
 [layout]: https://ultraq.github.io/thymeleaf-layout-dialect/getting-started/
 [thm-live-reload]: https://attacomsian.com/blog/spring-boot-auto-reload-thymeleaf-templates
 [dev-profile]: ./src/main/resources/application-dev.properties
+[alpinejs]: https://alpinejs.dev

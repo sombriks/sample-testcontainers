@@ -4,7 +4,16 @@
             <!--/* status var came from parent th:with */-->
             <h1 class="card-header-title">[[${status.description}]]</h1>
         </header>
-        <div class="card-content is-flex-grow-1">
+        <div class="card-content is-flex-grow-1 status"
+             th:id="'status'+${status.id}"
+             th:value="${status.id}"
+             @dragover.prevent
+             @drop="e => {
+                const taskId = e.dataTransfer.getData('text/plain')
+                const taskEl = document.getElementById(taskId)
+                $el.appendChild(taskEl)
+                $dispatch('updateStatus', {taskEl, lane: $el})
+             }">
             <!--/* tasks var came from controller model setup */-->
             <th:block th:each="task : ${tasks}">
                 <th:block th:if="${task.status.id} eq ${status.id}">
@@ -14,7 +23,7 @@
             </th:block>
         </div>
         <div class="card-footer">
-
+            <button class="button card-footer-item m-1">ADD</button>
         </div>
     </section>
 </div>

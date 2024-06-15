@@ -4,6 +4,13 @@
       layout:decorate="@{/layouts/main.html}">
 <head>
     <title>Board</title>
+    <style>
+        .fixed-grid {
+            min-width: 600px;
+            min-height: 60vh;
+            max-height: 80vh;
+        }
+    </style>
 </head>
 <body>
 <th:block layout:fragment="content">
@@ -11,7 +18,8 @@
     <div th:class="'fixed-grid has-'+${statuses.size()}+'-cols'">
         <div class="grid">
             <th:block th:each="status : ${statuses}">
-                <th:block th:with="status=${status}" th:replace="~{/components/category-lanes}"></th:block>
+                <th:block th:with="status=${status}"
+                          th:replace="~{/components/category-lanes}"></th:block>
             </th:block>
         </div>
     </div>

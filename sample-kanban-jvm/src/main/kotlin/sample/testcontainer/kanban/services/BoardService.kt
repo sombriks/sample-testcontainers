@@ -61,4 +61,8 @@ class BoardService(
         personRepository.save(person)
     }
 
+    fun saveTask(task: Task) {
+        if(task.id == null) task.created = LocalDateTime.now()
+        taskRepository.save(task)
+    }
 }
