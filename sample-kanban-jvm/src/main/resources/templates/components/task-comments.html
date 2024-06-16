@@ -1,0 +1,32 @@
+<div th:id="'task-comments-'+${task.id}">
+    <h2>Comments</h2>
+    <form class="card-footer-item"
+          hx-swap="outerHTML"
+          th:hx-target="'#task-comments-'+${task.id}"
+          th:hx-post="@{/task/{id}/comments(id=${task.id})}">
+        <input type="hidden" name="taskId" th:value="${task.id}"/>
+        <input type="hidden" name="personId" th:value="${user.id}"/>
+        <div class="field has-addons">
+            <div class="control">
+                <input required
+                       type="text"
+                       class="input"
+                       name="content"
+                       placeholder="Add comment">
+            </div>
+            <div class="control">
+                <button type="submit"
+                        class="button is-info">
+                    <span class="icon">
+                        <ion-icon name="save-outline"></ion-icon>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </form>
+    <p class="notification"
+       th:each="comment : ${task.messages}"
+       th:title="'comment #'+${comment.id}+' by '+${comment.person.name}+' at '+${comment.created}">
+        [[${comment.content}]]
+    </p>
+</div>

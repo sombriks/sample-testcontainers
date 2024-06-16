@@ -10,6 +10,7 @@ import sample.testcontainer.kanban.models.Message
 import sample.testcontainer.kanban.models.Person
 import sample.testcontainer.kanban.models.Status
 import sample.testcontainer.kanban.models.Task
+import sample.testcontainer.kanban.models.to.MessageTO
 import sample.testcontainer.kanban.models.to.TaskStatusTO
 import sample.testcontainer.kanban.repositories.MessageRepository
 import sample.testcontainer.kanban.repositories.PersonRepository
@@ -83,7 +84,7 @@ class BoardService(
         val task = findTask(data.task!!)!!
         val status = findStatus(data.status!!)!!
         task.status = status
-        if(data.description != null) task.description = data.description
+        if (data.description != null) task.description = data.description
         saveTask(task)
         return task
     }
@@ -106,5 +107,12 @@ class BoardService(
         val person = personRepository.findByIdOrNull(personId)!!
         task.people?.add(person)
         saveTask(task)
+    }
+
+    @Transactional
+    fun addComment(data: MessageTO) {
+        val task = taskRepository.findByIdOrNull(data.taskId)!!
+        val person = personRepository.findByIdOrNull(data.personId)!!
+        saveMessage(Message(content = data.content, task = task, person = person))
     }
 }

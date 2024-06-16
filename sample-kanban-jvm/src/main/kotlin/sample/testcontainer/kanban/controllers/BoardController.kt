@@ -5,12 +5,15 @@ import jakarta.servlet.http.HttpServletResponse
 import jakarta.servlet.http.HttpSession
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 import sample.testcontainer.kanban.models.Person
 import sample.testcontainer.kanban.models.Task
+import sample.testcontainer.kanban.models.to.MessageTO
 import sample.testcontainer.kanban.models.to.TaskStatusTO
 import sample.testcontainer.kanban.services.BoardService
 
@@ -135,11 +138,29 @@ class BoardController(private val boardService: BoardService) {
         return "components/category-lanes"
     }
 
+    @PostMapping("task/{id}/comments")
+    fun addComment(
+        model: Model,
+        @CookieValue("x-user-info") info: String?,
+        @PathVariable id: Long,
+        data: MessageTO,
+    ): String {
+        logger.info("addComment")
+        if (info == null) return "redirect:/logout"
+        model.set("user", Person.fromCookie(info))
+        if (data.content == null) throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Provide message content")
+        boardService.addComment(data)
+        val task = boardService.findTask(id)
+        model.set("task", task)
+        return "components/task-comments"
+    }
+
     @PostMapping("task/{id}/join")
     fun joinTask(
         model: Model,
         @CookieValue("x-user-info") info: String?,
-        @PathVariable id: Long,): String {
+        @PathVariable id: Long,
+    ): String {
         logger.info("joinTask")
         if (info == null) return "redirect:/logout"
         val person = Person.fromCookie(info)
