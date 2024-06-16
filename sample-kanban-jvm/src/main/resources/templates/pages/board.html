@@ -5,17 +5,19 @@
 <head>
     <title>Board</title>
     <style>
-        .fixed-grid {
+        .lanes {
             min-width: 600px;
             min-height: 60vh;
-            max-height: 80vh;
+        }
+        .lane {
+            min-width: 200px;
         }
     </style>
 </head>
 <body>
 <th:block layout:fragment="content">
     <h1>Welcome to the board, <span th:text="${user.name}"></span></h1>
-    <div th:class="'fixed-grid has-'+${statuses.size()}+'-cols'">
+    <div th:class="'lanes fixed-grid has-'+${statuses.size()}+'-cols'">
         <div class="grid">
             <th:block th:each="status : ${statuses}">
                 <th:block th:with="status=${status}"

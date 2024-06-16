@@ -1,26 +1,44 @@
 <article class="message task"
+         draggable="true"
+         x-data="{openModal:false}"
+         hx-ext="hx-dataset-include"
+         hx-swap="outerHTML"
+         hx-trigger="put-task"
          th:id="'task'+${task.id}"
          th:data-task="${task.id}"
          th:data-status="${task.status.id}"
          th:hx-put="@{/task/{id}(id=${task.id})}"
-         hx-ext="hx-dataset-include"
-         hx-trigger="put-task"
-         draggable="true"
          @dragstart="e => e.dataTransfer.setData('text/plain', $el.id)"
          @update-status.window="e => {
             if(e.detail.taskEl == $el) { // needed to filter real target
                 $el.dataset.status=e.detail.lane.dataset.status
+                $refs[`form-status-${$el.dataset.task}`].value = e.detail.lane.dataset.status
                 $dispatch('put-task', $el.dataset)
             }
          }">
     <div class="message-header">
         #[[${task.id}]] - [[${task.description}]]
     </div>
-    <div class="message-body">
+    <div class="message-body is-flex is-justify-content-space-between is-align-content-center">
         <!--/*
-            task and status can either come from parent componente or from the
-            dedicated component controller
+            task and status can either come from parent component or from the
+            dedicated router component controller
         */-->
-        [[${task.messages.size()}]] msg, [[${task.people.size()}]] ppl
+        <span class="icon-text">
+            <span class="icon">
+                <ion-icon name="chatbox-ellipses-outline"></ion-icon>
+            </span>
+            <span>[[${task.messages?.size() ?: 0}]]</span>
+            <span class="icon">
+                <ion-icon name="people-circle-outline"></ion-icon>
+            </span>
+            <span>[[${task.people?.size() ?: 0}]]</span>
+        </span>
+        <button class="button" @click="openModal=true">
+            <span class="icon">
+                <ion-icon name="information-circle-outline"></ion-icon>
+            </span>
+        </button>
     </div>
+    <th:block th:replace="~{/components/task-modal}"></th:block>
 </article>

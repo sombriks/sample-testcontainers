@@ -54,8 +54,8 @@ Or:
 - LiveReload looks like a forgotten art. On eclipse, it just was there, working.
   But with [some research][thm-live-reload] and
   [proper configuration][dev-profile], it can be somewhat restored.
-- [Alpine.js][alpinejs] remembers the simplicity of original Angular.js, but it's much more
-  like Vue.js. That's a good thing.
+- [Alpine.js][alpinejs] remembers the simplicity of original Angular.js, but
+  it's much more like Vue.js. That's a good thing.
 
 [testcontainers]: https://testcontainers.com/
 [java]: https://dev.java/download/

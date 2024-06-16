@@ -1,0 +1,42 @@
+<div class="modal"
+     :class="openModal && 'is-active'"
+     th:id="'task-modal-'+${task.id}">
+    <div class="modal-background"></div>
+    <button class="modal-close is-large"
+            aria-label="close"
+            @click="e => openModal=false"></button>
+    <div class="modal-content">
+        <h1>Task #[[${task.id}]]</h1>
+        <form class="form"
+              hx-swap="outerHTML"
+              th:hx-target="'#task'+${task.id}"
+              th:hx-put="@{/task/{id}(id=${task.id})}">
+            <input type="hidden"
+                   name="task"
+                   th:value="${task.id}"/>
+            <input type="hidden"
+                   name="status"
+                   th:x-ref="'form-status-'+${task.id}"
+                   th:value="${task.status.id}"/>
+            <div class="field">
+                <label class="label"
+                       th:for="'task-description-'+${task.id}">
+                    Task Description</label>
+                <div class="control">
+                    <input placeholder="Task description"
+                           name="description"
+                           class="input"
+                           type="text"
+                           required
+                           th:id="'task-description-'+${task.id}"
+                           th:value="${task.description}"/>
+                </div>
+            </div>
+            <div class="field is-grouped">
+                <div class="control">
+                    <button type="submit" class="button is-primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

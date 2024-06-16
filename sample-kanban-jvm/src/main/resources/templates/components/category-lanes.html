@@ -1,11 +1,11 @@
-<div class="cell is-flex">
+<div class="cell is-flex lane"
+     th:id="'status'+${status.id}">
     <section class="card is-flex is-flex-grow-1 is-flex-direction-column">
         <header class="card-header">
             <!--/* status var came from parent th:with */-->
             <h1 class="card-header-title">[[${status.description}]]</h1>
         </header>
         <div class="card-content is-flex-grow-1 status"
-             th:id="'status'+${status.id}"
              th:data-status="${status.id}"
              @dragover.prevent
              @drop="e => {
@@ -22,8 +22,29 @@
                 </th:block>
             </th:block>
         </div>
-        <div class="card-footer">
-            <button class="button card-footer-item m-1">ADD</button>
+        <div class="card-footer" x-data="{mode:0}">
+            <button class="button card-footer-item m-1"
+                    x-show="mode==0"
+                    @click="mode++">ADD
+            </button>
+            <form class="card-footer-item"
+                  x-show="mode==1"
+                  hx-swap="outerHTML"
+                  th:hx-target="'#status'+${status.id}"
+                  th:hx-post="@{/task}"
+                  @click.outside="mode=0">
+                <input type="hidden" name="status" th:value="${status.id}"/>
+                <div class="field has-addons">
+                    <div class="control">
+                        <input class="input" type="text" name="description" placeholder="Describe new task">
+                    </div>
+                    <div class="control">
+                        <button type="submit" class="button is-info">
+                            SAVE
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </section>
 </div>

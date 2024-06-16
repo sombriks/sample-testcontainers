@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import sample.testcontainer.kanban.models.Message
 import sample.testcontainer.kanban.models.Person
 import sample.testcontainer.kanban.models.Status
@@ -23,7 +24,6 @@ class BoardService(
     private val statusRepository: StatusRepository,
     private val taskRepository: TaskRepository,
 ) {
-
     fun listMessages(q: String, pageable: Pageable): Page<Message> {
         return messageRepository.findByContentContainingIgnoreCase(q, pageable)
     }
@@ -56,25 +56,30 @@ class BoardService(
         return taskRepository.findByIdOrNull(id)
     }
 
+    @Transactional
     fun saveMessage(message: Message) {
         if (message.id == null) message.created = LocalDateTime.now()
         messageRepository.save(message)
     }
 
+    @Transactional
     fun savePerson(person: Person) {
         if (person.id == null) person.created = LocalDateTime.now()
         personRepository.save(person)
     }
 
+    @Transactional
     fun saveTask(task: Task) {
         if (task.id == null) task.created = LocalDateTime.now()
         taskRepository.save(task)
     }
 
+    @Transactional
     fun updateTaskStatus(data: TaskStatusTO): Task {
         val task = findTask(data.task!!)!!
         val status = findStatus(data.status!!)!!
         task.status = status
+        if(data.description != null) task.description = data.description
         saveTask(task)
         return task
     }

@@ -8,5 +8,5 @@ import org.springframework.context.annotation.Configuration
 class ThymeleafConfig {
 
     @Bean
-    fun layoutDialect() = LayoutDialect()
+    fun layoutDialect() = LayoutDialect() // a decent layout engine
 }

@@ -10,10 +10,11 @@ import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.*
 import sample.testcontainer.kanban.models.Person
+import sample.testcontainer.kanban.models.Task
 import sample.testcontainer.kanban.models.to.TaskStatusTO
 import sample.testcontainer.kanban.services.BoardService
 
-@Controller
+@Controller // not a RestController, we want to render views
 @RequestMapping("/")
 class BoardController(private val boardService: BoardService) {
 
@@ -29,7 +30,8 @@ class BoardController(private val boardService: BoardService) {
     fun login(model: Model): String {
         logger.info("login")
         // it's just an example
-        model.set("users", boardService.listPeople("", PageRequest.ofSize(10)).content)
+        model.set("users", boardService
+            .listPeople("", PageRequest.ofSize(10)).content)
         return "pages/login"
     }
 
@@ -61,9 +63,11 @@ class BoardController(private val boardService: BoardService) {
         if (info == null) return "redirect:/logout"
         // TODO consider use https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/sessionattribute.html
         model.set("user", Person.fromCookie(info))
-        model.set("people", boardService.listPeople("", PageRequest.ofSize(10)).content)
+        model.set("people", boardService
+            .listPeople("", PageRequest.ofSize(10)).content)
         model.set("statuses", boardService.listStatuses())
-        model.set("tasks", boardService.listTasks("", PageRequest.ofSize(100)).content)
+        model.set("tasks", boardService
+            .listTasks("", PageRequest.ofSize(100)).content)
         return "pages/board"
     }
 
@@ -72,10 +76,29 @@ class BoardController(private val boardService: BoardService) {
         logger.info("table")
         if (info == null) return "redirect:/logout"
         model.set("user", Person.fromCookie(info))
-        model.set("people", boardService.listPeople("", PageRequest.ofSize(10)).content)
+        model.set("people", boardService
+            .listPeople("", PageRequest.ofSize(10)).content)
         model.set("statuses", boardService.listStatuses())
-        model.set("tasks", boardService.listTasks("", PageRequest.ofSize(100)).content)
+        model.set("tasks", boardService
+            .listTasks("", PageRequest.ofSize(100)).content)
         return "pages/table"
+    }
+
+    @PostMapping("task")
+    fun createTask(
+        model: Model, @CookieValue("x-user-info") info: String?,
+        data: TaskStatusTO,
+    ): String {
+        logger.info("createTask")
+        if (info == null) return "redirect:/logout"
+        model.set("user", Person.fromCookie(info))
+        val status = boardService.findStatus(data.status!!)
+        model.set("status", status)
+        val task = Task(description = data.description, status = status)
+        boardService.saveTask(task)
+        model.set("tasks", boardService
+            .listTasks("", PageRequest.ofSize(100)).content)
+        return "components/category-lanes"
     }
 
     @PutMapping("task/{id}")

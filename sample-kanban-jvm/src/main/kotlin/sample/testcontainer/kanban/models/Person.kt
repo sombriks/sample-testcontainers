@@ -23,6 +23,7 @@ data class Person(
     @OrderBy("created desc")
     var tasks: MutableList<Task>? = null,
 ) {
+    // TODO create a Transfer Object and remove this
     companion object {
         fun fromCookie(info: String): Person {
             val person = Person()

@@ -5,12 +5,20 @@
     <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Simple Kanban</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0.5,maximum-scale=2.0">
     <link rel="icon" type="image/png" href="/favicon.png">
+
     <link rel="stylesheet"
           th:href="@{/webjars/bulma/1.0.1/css/bulma.css}"/>
+
     <script type="application/javascript"
             th:src="@{/webjars/htmx.org/2.0.0-beta4/dist/htmx.js}"></script>
     <script type="application/javascript" defer
             th:src="@{/webjars/alpinejs/3.14.0/dist/cdn.js}"></script>
+
+    <script type="module"
+            th:src="@{/webjars/ionicons/7.2.1/dist/ionicons/ionicons.esm.js}"></script>
+    <script type="application/javascript" nomodule=""
+            th:src="@{/webjars/ionicons/7.2.1/dist/ionicons/ionicons.js}"></script>
+
     <script>
       htmx.defineExtension('hx-dataset-include', {
         encodeParameters: function (xhr, parameters, elt) {
