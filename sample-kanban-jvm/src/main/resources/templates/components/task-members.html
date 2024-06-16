@@ -1,0 +1,28 @@
+<div th:id="'task-members-'+${task.id}">
+    <h2>People working on this task</h2>
+    <div class="field is-grouped is-grouped-multiline">
+        <div class="control"
+             th:each="person : ${task.people}">
+            <div class="tags has-addons">
+            <span th:class="${person.id == user.id ? 'tag is-primary' : 'tag'}">[[${person.name}]]</span>
+            <span class="tag is-delete"
+                  hx-swap="outerHTML"
+                  hx-confirm="Are you sure?"
+                  th:hx-target="'#task-members-'+${task.id}"
+                  th:hx-delete="@{/task/{taskId}/person/{personId}(taskId=${task.id},personId=${person.id})}"></span>
+            </div>
+        </div>
+    </div>
+    <div class="buttons is-right"
+         th:unless="${task.hasMember(task, user.id)}">
+        <button class="button is-primary"
+                hx-swap="outerHTML"
+                th:hx-target="'#task-members-'+${task.id}"
+                th:hx-post="@{/task/{taskId}/join(taskId=${task.id})}">
+        <span class="icon">
+            <ion-icon name="person-add-outline"></ion-icon>
+        </span>
+            <span>Join this task</span>
+        </button>
+    </div>
+</div>

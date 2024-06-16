@@ -51,11 +51,19 @@ Or:
 - The [layout dialect for thymeleaf][layout]
   delivers important feature on view design which, in my opinion, should be part
   of the main thing.
+- On the other hand, whenever a development error happens, (i.e. forgot to feed
+  proper data in spring mvc model), thymeleaf fails to deliver the correct
+  faulty template name, lost itself in the include maze that can form very
+  quickly when we go through this pages and components path.
 - LiveReload looks like a forgotten art. On eclipse, it just was there, working.
   But with [some research][thm-live-reload] and
   [proper configuration][dev-profile], it can be somewhat restored.
 - [Alpine.js][alpinejs] remembers the simplicity of original Angular.js, but
   it's much more like Vue.js. That's a good thing.
+- Controller routes for pages and for components are a thing under evaluation.
+  It helps even more if the pages are built with components. Proper and wise ids
+  attributions are a paramount strategy in this scenario, and i think it helps
+  with e2e tests. Still experimenting.
 
 [testcontainers]: https://testcontainers.com/
 [java]: https://dev.java/download/

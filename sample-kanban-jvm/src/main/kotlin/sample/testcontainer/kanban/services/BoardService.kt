@@ -56,6 +56,10 @@ class BoardService(
         return taskRepository.findByIdOrNull(id)
     }
 
+    fun findStatusByTaskId(taskId: Long): Status? {
+        return statusRepository.findStatusByTaskId(taskId)
+    }
+
     @Transactional
     fun saveMessage(message: Message) {
         if (message.id == null) message.created = LocalDateTime.now()
@@ -75,12 +79,32 @@ class BoardService(
     }
 
     @Transactional
-    fun updateTaskStatus(data: TaskStatusTO): Task {
+    fun updateTask(data: TaskStatusTO): Task {
         val task = findTask(data.task!!)!!
         val status = findStatus(data.status!!)!!
         task.status = status
         if(data.description != null) task.description = data.description
         saveTask(task)
         return task
+    }
+
+    @Transactional
+    fun deleteTask(id: Long) {
+        taskRepository.deleteById(id)
+    }
+
+    @Transactional
+    fun removePersonFromTask(taskId: Long, personId: Long) {
+        val task = taskRepository.findByIdOrNull(taskId)!!
+        task.people?.removeIf { it.id == personId }
+        taskRepository.save(task)
+    }
+
+    @Transactional
+    fun joinTask(taskId: Long, personId: Long?) {
+        val task = taskRepository.findByIdOrNull(taskId)!!
+        val person = personRepository.findByIdOrNull(personId)!!
+        task.people?.add(person)
+        saveTask(task)
     }
 }

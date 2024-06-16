@@ -32,4 +32,9 @@ data class Task(
     override fun toString(): String {
         return "Task(id=$id, description=$description, created=$created, status=$status)"
     }
+
+    companion object {
+        @JvmStatic
+        fun hasMember(task: Task, personId: Long) = task.people?.find { it.id == personId } != null
+    }
 }

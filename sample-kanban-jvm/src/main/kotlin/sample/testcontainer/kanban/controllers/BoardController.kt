@@ -29,9 +29,9 @@ class BoardController(private val boardService: BoardService) {
     @GetMapping("login")
     fun login(model: Model): String {
         logger.info("login")
-        // it's just an example
-        model.set("users", boardService
-            .listPeople("", PageRequest.ofSize(10)).content)
+        // it's just an example, no real login here
+        val users = boardService.listPeople("", PageRequest.ofSize(10)).content
+        model.set("users", users)
         return "pages/login"
     }
 
@@ -63,11 +63,11 @@ class BoardController(private val boardService: BoardService) {
         if (info == null) return "redirect:/logout"
         // TODO consider use https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/sessionattribute.html
         model.set("user", Person.fromCookie(info))
-        model.set("people", boardService
-            .listPeople("", PageRequest.ofSize(10)).content)
+        val people = boardService.listPeople("", PageRequest.ofSize(10)).content
+        model.set("people", people)
         model.set("statuses", boardService.listStatuses())
-        model.set("tasks", boardService
-            .listTasks("", PageRequest.ofSize(100)).content)
+        val tasks = boardService.listTasks("", PageRequest.ofSize(100)).content
+        model.set("tasks", tasks)
         return "pages/board"
     }
 
@@ -76,11 +76,11 @@ class BoardController(private val boardService: BoardService) {
         logger.info("table")
         if (info == null) return "redirect:/logout"
         model.set("user", Person.fromCookie(info))
-        model.set("people", boardService
-            .listPeople("", PageRequest.ofSize(10)).content)
+        val people = boardService.listPeople("", PageRequest.ofSize(10)).content
+        model.set("people", people)
         model.set("statuses", boardService.listStatuses())
-        model.set("tasks", boardService
-            .listTasks("", PageRequest.ofSize(100)).content)
+        val tasks = boardService.listTasks("", PageRequest.ofSize(100)).content
+        model.set("tasks", tasks)
         return "pages/table"
     }
 
@@ -96,8 +96,8 @@ class BoardController(private val boardService: BoardService) {
         model.set("status", status)
         val task = Task(description = data.description, status = status)
         boardService.saveTask(task)
-        model.set("tasks", boardService
-            .listTasks("", PageRequest.ofSize(100)).content)
+        val tasks = boardService.listTasks("", PageRequest.ofSize(100)).content
+        model.set("tasks", tasks)
         return "components/category-lanes"
     }
 
@@ -112,7 +112,60 @@ class BoardController(private val boardService: BoardService) {
         if (info == null) return "redirect:/logout"
         model.set("user", Person.fromCookie(info))
         if (id != data.task) return "redirect:/error"
-        model.set("task", boardService.updateTaskStatus(data))
+        model.set("task", boardService.updateTask(data))
+        val status = boardService.findStatus(data.status!!)
+        model.set("status", status)
         return "components/task-card"
+    }
+
+    @DeleteMapping("task/{id}")
+    fun deleteTask(
+        model: Model,
+        @CookieValue("x-user-info") info: String?,
+        @PathVariable id: Long,
+    ): String {
+        logger.info("deleteTask")
+        if (info == null) return "redirect:/logout"
+        model.set("user", Person.fromCookie(info))
+        val status = boardService.findStatusByTaskId(id)
+        model.set("status", status)
+        boardService.deleteTask(id)
+        val tasks = boardService.listTasks("", PageRequest.ofSize(100)).content
+        model.set("tasks", tasks)
+        return "components/category-lanes"
+    }
+
+    @PostMapping("task/{id}/join")
+    fun joinTask(
+        model: Model,
+        @CookieValue("x-user-info") info: String?,
+        @PathVariable id: Long,): String {
+        logger.info("joinTask")
+        if (info == null) return "redirect:/logout"
+        val person = Person.fromCookie(info)
+        boardService.joinTask(taskId = id, personId = person.id)
+        model.set("user", person)
+        val task = boardService.findTask(id)
+        model.set("task", task)
+        return "components/task-members"
+    }
+
+    @DeleteMapping("task/{taskId}/person/{id}")
+    fun removePersonFromTask(
+        model: Model,
+        @CookieValue("x-user-info") info: String?,
+        @PathVariable taskId: Long,
+        @PathVariable id: Long,
+    ): String {
+        logger.info("removePersonFromTask")
+        if (info == null) return "redirect:/logout"
+        model.set("user", Person.fromCookie(info))
+        boardService.removePersonFromTask(
+            taskId = taskId,
+            personId = id,
+        )
+        val task = boardService.findTask(taskId)
+        model.set("task", task)
+        return "components/task-members"
     }
 }

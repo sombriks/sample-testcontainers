@@ -25,7 +25,10 @@
         <div class="card-footer" x-data="{mode:0}">
             <button class="button card-footer-item m-1"
                     x-show="mode==0"
-                    @click="mode++">ADD
+                    @click="mode++">
+                <span class="icon">
+                    <ion-icon name="add-outline"></ion-icon>
+                </span>
             </button>
             <form class="card-footer-item"
                   x-show="mode==1"
@@ -36,11 +39,17 @@
                 <input type="hidden" name="status" th:value="${status.id}"/>
                 <div class="field has-addons">
                     <div class="control">
-                        <input class="input" type="text" name="description" placeholder="Describe new task">
+                        <input class="input"
+                               type="text"
+                               name="description"
+                               placeholder="Describe new task">
                     </div>
                     <div class="control">
-                        <button type="submit" class="button is-info">
-                            SAVE
+                        <button type="submit"
+                                class="button is-info">
+                            <span class="icon">
+                                <ion-icon name="save-outline"></ion-icon>
+                            </span>
                         </button>
                     </div>
                 </div>

@@ -5,38 +5,63 @@
     <button class="modal-close is-large"
             aria-label="close"
             @click="e => openModal=false"></button>
-    <div class="modal-content">
-        <h1>Task #[[${task.id}]]</h1>
-        <form class="form"
-              hx-swap="outerHTML"
-              th:hx-target="'#task'+${task.id}"
-              th:hx-put="@{/task/{id}(id=${task.id})}">
-            <input type="hidden"
-                   name="task"
-                   th:value="${task.id}"/>
-            <input type="hidden"
-                   name="status"
-                   th:x-ref="'form-status-'+${task.id}"
-                   th:value="${task.status.id}"/>
-            <div class="field">
-                <label class="label"
-                       th:for="'task-description-'+${task.id}">
-                    Task Description</label>
-                <div class="control">
-                    <input placeholder="Task description"
-                           name="description"
-                           class="input"
-                           type="text"
-                           required
-                           th:id="'task-description-'+${task.id}"
-                           th:value="${task.description}"/>
+    <div class="modal-content is-overflow-hidden">
+        <div class="columns">
+            <div class="column is-two-thirds">
+                <h1>Task #[[${task.id}]]</h1>
+                <div class="field is-grouped is-grouped-right">
+                    <div class="control">
+                        <button class="button is-danger"
+                                hx-confirm="Are you sure?"
+                                th:hx-target="'#status'+${status.id}"
+                                th:hx-delete="@{/task/{id}(id=${task.id})}">
+                                <span class="icon">
+                                    <ion-icon name="trash-outline"></ion-icon>
+                                </span>
+                        </button>
+                    </div>
                 </div>
+                <form class="form"
+                      hx-swap="outerHTML"
+                      th:hx-target="'#task'+${task.id}"
+                      th:hx-put="@{/task/{id}(id=${task.id})}">
+                    <input type="hidden"
+                           name="task"
+                           th:value="${task.id}"/>
+                    <!--/* this one needs frontend updates so we x-ref it */-->
+                    <input type="hidden"
+                           name="status"
+                           th:x-ref="'form-status-'+${task.id}"
+                           th:value="${task.status.id}"/>
+                    <div class="field">
+                        <label class="label"
+                               th:for="'task-description-'+${task.id}">
+                            Task Description</label>
+                        <div class="control">
+                            <input placeholder="Task description"
+                                   name="description"
+                                   class="input"
+                                   type="text"
+                                   required
+                                   th:id="'task-description-'+${task.id}"
+                                   th:value="${task.description}"/>
+                        </div>
+                    </div>
+                    <div class="field is-grouped is-grouped-right">
+                        <div class="control">
+                            <button type="submit" class="button is-primary">
+                                <span class="icon">
+                                    <ion-icon name="save-outline"></ion-icon>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="field is-grouped">
-                <div class="control">
-                    <button type="submit" class="button is-primary">Save</button>
-                </div>
+            <div class="column">
+                <th:block th:replace="~{/components/task-members}"></th:block>
             </div>
-        </form>
+        </div>
+
     </div>
 </div>
