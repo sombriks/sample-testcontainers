@@ -1,0 +1,25 @@
+{
+  "type": "module",
+  "name": "sample-kanban-node",
+  "version": "1.0.0",
+  "description": "sampling the capabilities of TestContainers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "TestContainers",
+    "postgres",
+    "alpinejs",
+    "ionicons",
+    "bulma",
+    "sinon",
+    "knex",
+    "htmx",
+    "koa",
+    "pug",
+    "ava"
+  ],
+  "author": "Leonardo Silveira <sombriks@gmail.com>",
+  "license": "MIT"
+}
