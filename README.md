@@ -1,4 +1,4 @@
-# Sample Testcontainers
+# [Sample Testcontainers][repo]
 
 Samples on why and how to use [TestContainers][testcontainers]
 
@@ -171,4 +171,5 @@ The complete source code can be found here.
 
 Happy hacking!
 
+[repo]: https://github.com/sombriks/sample-testcontainers
 [testcontainers]: https://testcontainers.com/

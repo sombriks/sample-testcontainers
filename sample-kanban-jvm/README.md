@@ -10,7 +10,7 @@ purposes using [TestContainers][testcontainers]
 - [spring boot 3][spring-boot]
 - [thymeleaf 3][thymeleaf]
 - [bulma 1][bulma] (via [webjars][webjars])
-- [htmx 2][htmx] (via webjars)
+- [htmx.org 2][htmx] (via webjars)
 - [alpinejs 3][alpinejs] (via webjars)
 - and of course [TestContainers 1.19][testcontainers]
 

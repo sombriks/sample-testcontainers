@@ -1,3 +1,3 @@
-import Koa from 'koa';
+import Koa from 'koa'
 
-export const app = new Koa();
+export const app = new Koa()
