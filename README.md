@@ -84,9 +84,61 @@ is needed. And TestContainers offers goodies to be used exactly in that phase:
 ### Sample code - Spring/Kotlin/JUnit
 
 Spring tests has not only the setup phase but also The @TestConfiguration
-stereotype so the DI container will do the heavy-lifting for you.
+stereotype so the DI container will do the heavy-lifting for you:
 
-_some sample code_
+```kotlin
+package sample.testcontainer.kanban
+
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection
+import org.springframework.context.annotation.Bean
+import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.utility.DockerImageName
+
+@TestConfiguration(proxyBeanMethods = false)
+class TestcontainersConfiguration {
+
+    @Bean
+    @ServiceConnection
+    fun postgresContainer(): PostgreSQLContainer<*> {
+        return PostgreSQLContainer(
+            DockerImageName
+                .parse("postgres:16.3-alpine3.20")
+        ).withEnv(
+            mapOf(
+                "POSTGRES_DB" to "kanbandb",
+                "POSTGRES_USER" to "kanbanusr",
+                "POSTGRES_PASSWORD" to "kanbanpwd"
+            )
+        ).withInitScript("./initial-state.sql")
+    }
+
+}
+```
+
+This configuration should be "imported" into the test case so the default
+database configuration, which probably won't be present in a CI workflow, can be
+replaced in a transparent way. Someone at TestContainers team indeed made a fine
+work on this craft:
+
+```kotlin
+package sample.testcontainer.kanban
+
+import org.junit.jupiter.api.Test
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
+
+@SpringBootTest
+// just add that and you have a full-featured, predictable, database for test!
+@Import(TestcontainersConfiguration::class)
+class SampleKanbanJvmApplicationTests {
+
+	@Test
+	fun contextLoads() {
+	}
+
+}
+```
 
 ### Sample code - Koa/Knex/Ava
 

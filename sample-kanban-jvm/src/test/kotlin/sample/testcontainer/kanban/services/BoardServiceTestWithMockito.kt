@@ -13,11 +13,13 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.test.context.ActiveProfiles
 import sample.testcontainer.kanban.models.Person
 import sample.testcontainer.kanban.repositories.PersonRepository
 import org.mockito.Mockito.`when` as _when
 
 @SpringBootTest
+@ActiveProfiles("test")
 class BoardServiceTestWithMockito {
 
     @Autowired

@@ -1,2 +1,4 @@
 build
+coverage
 .gradle
+node_modules

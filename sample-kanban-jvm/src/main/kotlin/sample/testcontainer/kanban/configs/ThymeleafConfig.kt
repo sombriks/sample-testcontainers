@@ -1,4 +1,4 @@
-package sample.testcontainer.kanban.config
+package sample.testcontainer.kanban.configs
 
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect
 import org.springframework.context.annotation.Bean
