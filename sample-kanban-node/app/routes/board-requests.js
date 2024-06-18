@@ -4,7 +4,6 @@
  * @returns {*&{components: {}, pages: {login(*): Promise<*>, board(*): Promise<void>, table(*): Promise<*>}}}
  */
 export const boardRequests = (options) => ({
-  ...options,
   pages: {
     async board (ctx) {
       await ctx.render('pages/board')
