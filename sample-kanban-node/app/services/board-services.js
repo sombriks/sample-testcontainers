@@ -4,6 +4,10 @@
  * @param {{db}} options
  * @returns configured services
  */
-export const boardServices = (options) => {
-  return { ...options }
+export const boardServices = ({db}) => {
+  return {
+    async listUsers() {
+      return db("kanban.person")
+    }
+  }
 }

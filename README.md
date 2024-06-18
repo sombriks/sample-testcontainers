@@ -63,14 +63,14 @@ is the database, here goes some samples.
 
 ## Introducing TestContainers
 
-One way to mock the database is to use some lightweight database runtime like h2
+One way to test the database is to use some lightweight database runtime like h2
 or sqlite, but that comes with a price: the dialect might be different from the
-real deal.
+real deal and therefore you must be cautious about your queries.
 
 To properly avoid that, it's ideal to use same RDBMS for development, staging
 and for testing.
 
-Using TestContainers makes this task a real breeze.
+Using TestContainers makes this task a real easy breeze.
 
 ## Testing the database
 
@@ -79,12 +79,12 @@ database state. We expect a certain user/password to be accepted; we expect a
 certain schema and a set of tables to exists. We expect some data to be present.
 
 Therefore, when spinning up a test suite involving relational data, some setup
-is needed. And TestContainers offers goodies to be used exactly in that phase:
+is needed. And TestContainers offers goodies to be used exactly in that phase.
 
 ### Sample code - Spring/Kotlin/JUnit
 
 Spring tests has not only the setup phase but also The @TestConfiguration
-stereotype so the DI container will do the heavy-lifting for you:
+stereotype, so the DI container does all the heavy-lifting for you:
 
 ```kotlin
 package sample.testcontainer.kanban

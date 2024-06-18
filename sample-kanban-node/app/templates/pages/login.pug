@@ -2,4 +2,17 @@ extends ../layouts/main.pug
 block in_head
     +title('Login')
 block in_body
-    h1 Login
+    .is-mobile.is-centered.columns
+        .column.is-half
+            form.card(action='login', method='post')
+                header.card-header
+                    h1.card-header-title.title Login
+                section.card-content
+                    .field
+                        label.label(for='userId') Pick an user
+                        .control.select.is-primary.is-fullwidth
+                            select(id='userId', name='userId')
+                                each user in users
+                                  option(value=user.id)= user.name
+                footer.card-footer
+                    button.button.is-primary.card-footer-item.m-1(type='submit') Pick this user

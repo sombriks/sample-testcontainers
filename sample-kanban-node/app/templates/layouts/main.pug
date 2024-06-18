@@ -3,12 +3,34 @@ mixin title(page_title)
 doctype html
 html
     head
+        link(rel="icon", type="image/png", href="/favicon.png")
         link(rel='stylesheet',href='bulma/bulma.css')
         script(type='application/javascript', defer, src='alpinejs/cdn.js')
         script(type='application/javascript', src='htmx.org/htmx.js')
         script(type='module', src='ionicons/ionicons/ionicons.esm.js')
         script(type='application/javascript', nomodule='', src='ionicons/ionicons/ionicons.js')
+        script.
+          htmx.defineExtension('hx-dataset-include', {
+            encodeParameters: function (xhr, parameters, elt) {
+              Object
+                .keys(elt.dataset)
+                .forEach(k => parameters
+                  .append(k, elt.dataset[k]))
+            }
+          })
         block in_head
-    body
-        block in_body
-        block in_footer
+    body(x-data)
+        //- adding x-data here makes entire document capable of use alpinejs
+        .container.is-max-widescreen
+            if user != null
+                nav.navbar
+                    .navbar-menu
+                        .navbar-start
+                            a.navbar-item(href='board') Board
+                            a.navbar-item(href='table') Table
+                        .navbar-end
+                            a.navbar-item(href='logout') Logout
+            section.section
+                block in_body
+            footer.footer
+                block in_footer

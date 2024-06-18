@@ -28,7 +28,7 @@ dependencies {
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-	runtimeOnly("org.webjars.npm:htmx.org:2.0.0-beta4")
+	runtimeOnly("org.webjars.npm:htmx.org:2.0.0")
 	runtimeOnly("org.webjars.npm:alpinejs:3.14.0")
 	runtimeOnly("org.webjars.npm:ionicons:7.2.1")
 	runtimeOnly("org.webjars.npm:bulma:1.0.1")
