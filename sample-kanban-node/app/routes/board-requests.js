@@ -3,10 +3,13 @@
  * @param {{service}} options config object containing reference to the service
  * @returns {*&{components: {}, pages: {login(*): Promise<*>, board(*): Promise<void>, table(*): Promise<*>}}}
  */
-export const boardRequests = ({service}) => ({
+export const boardRequests = ({ service }) => ({
   pages: {
     async board (ctx) {
-      await ctx.render('pages/board')
+      const model = {
+        user: parseUser(ctx.cookies.get('x-user-info'))
+      }
+      await ctx.render('pages/board', model)
     },
     async login (ctx) {
       const model = {
@@ -15,8 +18,25 @@ export const boardRequests = ({service}) => ({
       await ctx.render('pages/login', model)
     },
     async table (ctx) {
-      await ctx.render('pages/table')
+      const model = {
+        user: parseUser(ctx.cookies.get('x-user-info'))
+      }
+      await ctx.render('pages/table', model)
     }
   },
   components: {}
 })
+
+/**
+ * helper to crack open user
+ *
+ * @param cookie user encoded
+ * @returns {{[p: string]: string} | null}
+ */
+const parseUser = cookie => {
+  if (!cookie) return null
+  const [kId, kName] = cookie.split('&')
+  const kvId = kId.split('=')
+  const kvName = kName.split('=')
+  return { [kvId[0]]: kvId[1], [kvName[0]]: kvName[1] }
+}

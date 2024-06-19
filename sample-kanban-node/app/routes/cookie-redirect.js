@@ -10,3 +10,21 @@ export const fakeLoginCheck = async (ctx, next) => { // simple redirect if the c
   if (userMaybe) return next(ctx)
   else return ctx.redirect('/login')
 }
+
+/**
+ *
+ * @param {service} options payload containing services to do business with
+ *
+ * @returns {function(*): Promise<*>} koa middleware
+ */
+export const fakeLogin = ({ service }) => async ctx => {
+  const { userId } = ctx.request.body
+  const user = await service.findUser(userId)
+  ctx.cookies.set('x-user-info', `name=${user.name}&id=${user.id}`)
+  return ctx.redirect('/board')
+}
+
+export const fakeLogout = ({ service }) => async ctx => {
+  ctx.cookies.set('x-user-info')
+  return ctx.redirect('/login')
+}

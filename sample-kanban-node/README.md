@@ -54,6 +54,10 @@ npm run dev
   be. Modular. Extensible. Easy to test.
 - Thanks to [standard][standard] we have a simple way to have some code quality
   _standards_.
+- Node with pure javascript is a breeze to fast prototype and experiment things
+  and throw away. To make code more reliable, testable, however, a few steps are
+  needed otherwise it becomes too rigid and doesn't provide proper ways to swap
+  components with mocks or test-aware versions.
 
 [testcontainers]: https://testcontainers.com
 [node]: https://nodejs.org

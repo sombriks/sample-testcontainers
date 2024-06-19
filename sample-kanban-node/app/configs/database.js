@@ -1,6 +1,6 @@
 import Knex from 'knex'
 
-export const db = Knex({
-  connection: process.env.PG_CONNECTION_URL,
+export const prepareDb = (dsn = process.env.PG_CONNECTION_URL) => Knex({
+  connection: dsn,
   client: 'pg'
 })

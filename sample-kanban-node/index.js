@@ -1,8 +1,7 @@
-import { app } from './app/main.js'
-import { db } from './app/configs/database.js'
+import { prepareApp } from './app/main.js'
 
 // entrypoint
-const start = async () => {
+const start = async ({ app, db } = prepareApp({})) => {
   // check db, run migrates, anything
   await db.raw('select 1 + 1')
 

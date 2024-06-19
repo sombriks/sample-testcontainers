@@ -1,13 +1,17 @@
 /**
  * services for kanban
  *
- * @param {{db}} options
+ * @param {{db: import('knex') }} options payload with query builder
+ *
  * @returns configured services
  */
-export const boardServices = ({db}) => {
+export const boardServices = ({ db }) => {
   return {
-    async listUsers() {
-      return db("kanban.person")
+    async listUsers () {
+      return db('kanban.person')
+    },
+    async findUser (id) {
+      return db('kanban.person').where({ id }).first()
     }
   }
 }
