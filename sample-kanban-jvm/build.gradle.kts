@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-	implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.0")
+	implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -28,7 +28,7 @@ dependencies {
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-	runtimeOnly("org.webjars.npm:htmx.org:2.0.0")
+	runtimeOnly("org.webjars.npm:htmx.org:2.0.0-beta4")
 	runtimeOnly("org.webjars.npm:alpinejs:3.14.0")
 	runtimeOnly("org.webjars.npm:ionicons:7.2.1")
 	runtimeOnly("org.webjars.npm:bulma:1.0.1")

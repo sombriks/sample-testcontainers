@@ -9,7 +9,7 @@ export const boardRequests = ({ service }) => ({
       const model = {
         user: parseUser(ctx.cookies.get('x-user-info')),
         statuses: await service.listStatuses(),
-        tasks: await service.listTasks(),
+        tasks: await service.listTasks()
       }
       await ctx.render('pages/board', model)
     },
@@ -23,7 +23,7 @@ export const boardRequests = ({ service }) => ({
       const model = {
         user: parseUser(ctx.cookies.get('x-user-info')),
         statuses: await service.listStatuses(),
-        tasks: await service.listTasks(),
+        tasks: await service.listTasks()
       }
       await ctx.render('pages/table', model)
     }
