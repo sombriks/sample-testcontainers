@@ -7,7 +7,9 @@ export const boardRequests = ({ service }) => ({
   pages: {
     async board (ctx) {
       const model = {
-        user: parseUser(ctx.cookies.get('x-user-info'))
+        user: parseUser(ctx.cookies.get('x-user-info')),
+        statuses: await service.listStatuses(),
+        tasks: await service.listTasks(),
       }
       await ctx.render('pages/board', model)
     },
@@ -19,7 +21,9 @@ export const boardRequests = ({ service }) => ({
     },
     async table (ctx) {
       const model = {
-        user: parseUser(ctx.cookies.get('x-user-info'))
+        user: parseUser(ctx.cookies.get('x-user-info')),
+        statuses: await service.listStatuses(),
+        tasks: await service.listTasks(),
       }
       await ctx.render('pages/table', model)
     }

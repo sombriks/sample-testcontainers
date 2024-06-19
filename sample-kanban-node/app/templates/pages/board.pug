@@ -1,5 +1,17 @@
-extends ../layouts/main.pug
+extends ../layouts/main
 block in_head
     +title('Board')
+    style.
+        .lanes {
+            min-width: 600px;
+            min-height: 60vh;
+        }
+        .lane {
+            min-width: 200px;
+        }
 block in_body
     h1= `Welcome to the board, ${user.name}`
+    .lanes.fixed-grid(class=`has-${statuses.length}-cols`)
+        .grid
+            each status in statuses
+              include ../components/category-lanes

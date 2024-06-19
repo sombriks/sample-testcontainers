@@ -1,0 +1,16 @@
+.cell.is-flex.lane(id='status'+status.id)
+    section.card.is-flex.is-flex-grow-1.is-flex-direction-column
+        header.card-header
+            h1.card-header-title= status.description
+        .card-content.is-flex-grow-1.status(
+            data-status= status.id
+            @dragover.prevent
+            @drop= `e => {
+              const taskId = e.dataTransfer.getData('text/plain')
+              const taskEl = document.getElementById(taskId)
+              $el.appendChild(taskEl)
+              $dispatch('update-status', {taskEl, lane: $el})
+            }`)
+            each task in tasks
+              if task.status_id == status.id
+                include ./task-card
