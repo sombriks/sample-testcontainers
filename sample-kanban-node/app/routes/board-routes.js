@@ -3,7 +3,7 @@
  * @param {{service}} options config object containing reference to the service
  * @returns {*&{components: {}, pages: {login(*): Promise<*>, board(*): Promise<void>, table(*): Promise<*>}}}
  */
-export const boardRequests = ({service}) => ({
+export const boardRoutes = ({service}) => ({
 	pages: {
 		async board(context) {
 			const model = {

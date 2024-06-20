@@ -7,13 +7,13 @@ import serve from 'koa-static';
 import {cabin} from './configs/logging.js';
 import {prepareDatabase} from './configs/database.js';
 import {pug} from './configs/views.js';
-import {boardRequests} from './routes/board-requests.js';
+import {boardRoutes} from './routes/board-routes.js';
 import {boardServices} from './services/board-services.js';
 import {fakeLogin, fakeLoginCheck, fakeLogout} from './routes/cookie-redirect.js';
 
 const _database = prepareDatabase();
 const _service = boardServices({db: _database});
-const _controller = boardRequests({service: _service});
+const _controller = boardRoutes({service: _service});
 
 /**
  * Function to return a properly configured Koa application
