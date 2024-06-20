@@ -14,7 +14,7 @@ purposes using [TestContainers][testcontainers]
 - [htmx.org 2][htmx]
 - [alpine.js 3][alpinejs]
 - [ava 6][ava]
-- [standard 17][standard]
+- [xo 0.58][xo]
 - and of course [@testcontainers/postgresql 10][pgtc]
 
 There are a few others, check the [package.json][package.json] for details.
@@ -52,12 +52,14 @@ npm run dev
   similar approach using [koa-static][koa-static] and [koa-mount][koa-mount].
 - [Koa][koa]'s simplicity always amazes me. This is what express was supposed to
   be. Modular. Extensible. Easy to test.
-- Thanks to [standard][standard] we have a simple way to have some code quality
-  _standards_.
+- Thanks to [xo][xo] we have a simple way to have some code quality _standards_.
+  Direct eslint configuration is quite unbearable and [other linter][standard]
+  alternatives seems too strict
 - Node with pure javascript is a breeze to fast prototype and experiment things
   and throw away. To make code more reliable, testable, however, a few steps are
   needed otherwise it becomes too rigid and doesn't provide proper ways to swap
   components with mocks or test-aware versions.
+- 
 
 [testcontainers]: https://testcontainers.com
 [node]: https://nodejs.org
@@ -69,6 +71,7 @@ npm run dev
 [htmx]: https://htmx.org/docs/#introduction
 [alpinejs]: https://alpinejs.dev
 [ava]: https://avajs.dev/
+[xo]: https://github.com/xojs/xo
 [standard]: https://standardjs.com/
 [pgtc]: https://testcontainers.com/modules/postgresql/
 [package.json]: ./package.json

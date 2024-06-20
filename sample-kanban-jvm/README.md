@@ -42,7 +42,7 @@ Or:
 - Unlike node or go versions, due to how classpath works, the init script for
   the database must be in test/resources folder.
 - Keep compose database and test container database with similar state can be
-  tricky, but the easiest way to do it is to use the same init script.
+  tricky, but the easiest way to do it is to use [the same init script][sql].
 - Don't forget to [import][spring-config-import] the spring test configuration
   into your test via `@Import` annotation otherwise the test will simply search
   for the database using the regular configuration instead of the TestContainer.
@@ -64,6 +64,10 @@ Or:
   It helps even more if the pages are built with components. Proper and wise ids
   attributions are a paramount strategy in this scenario, and i think it helps
   with e2e tests. Still experimenting.
+- Since there is no need to serialize JPA entities to json or something like
+  that, bidirectional mappings are back, so back! But mind the proper mapping
+  and the correct use of `mappedBy`, otherwise JPA will produce invalid queries
+  trying to violate database constraints.
 
 [testcontainers]: https://testcontainers.com/
 [java]: https://dev.java/download/
@@ -75,6 +79,7 @@ Or:
 [htmx]: https://htmx.org/docs/#introduction
 [infrastructure]: ../infrastructure/docker-compose.yml
 [initializr]: <https://start.spring.io/#!type=gradle-project-kotlin&language=kotlin&platformVersion=3.3.0&packaging=jar&jvmVersion=17&groupId=sample.testcontainer&artifactId=kanban&name=sample-kanban-jvm&description=Demo%20project%20for%20Spring%20Boot%2C%20Kotlin%20and%20TestContainers&packageName=sample.testcontainer.kanban&dependencies=web,testcontainers,postgresql,thymeleaf,data-jpa>
+[sql]: ./src/test/resources/initial-state.sql
 [spring-config-import]: ./src/test/kotlin/sample/testcontainer/kanban/services/BoardServiceTestWithTestContainers.kt
 [layout]: https://ultraq.github.io/thymeleaf-layout-dialect/getting-started/
 [thm-live-reload]: https://attacomsian.com/blog/spring-boot-auto-reload-thymeleaf-templates
