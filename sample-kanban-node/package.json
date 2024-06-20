@@ -23,6 +23,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "cross-env NODE_ENV=development nodemon -r dotenv-flow/config",
+    "predev": "npm run lint",
     "test": "cross-env NODE_ENV=test c8 ava",
     "pretest": "npm run lint",
     "lint": "standard --fix"

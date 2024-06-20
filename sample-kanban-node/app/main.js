@@ -51,6 +51,7 @@ export const prepareApp = ({
           b.del(controller.components.deleteTask)
           b.del('/person/:personId', controller.components.removePerson)
           b.post('/join', controller.components.joinTask)
+          b.post('/comments', controller.components.addComment)
         })
       })
     }).build()

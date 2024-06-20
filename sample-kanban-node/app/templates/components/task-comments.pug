@@ -1,0 +1,21 @@
+div(id="task-comments-" + task.id)
+    h2 Comments
+    form.card-footer-item(
+        hx-swap="outerHTML"
+        hx-target="#task-comments-" + task.id
+        hx-post=`task/${task.id}/comments`)
+        input(type="hidden", name="taskId", value=task.id)
+        input(type="hidden", name="personId", value=user.id)
+        .field.has-addons
+            .control
+                input.input(
+                    required
+                    type="text"
+                    name="content"
+                    placeholder="Add comment" )
+            .control
+                button.button.is-info(type="submit")
+                    span.icon
+                        ion-icon(name="save-outline")
+    each comment in task.messages
+        p.notification(title=`comment #${comment.id} by ${comment.person.name} at ${comment.created}`)= comment.content

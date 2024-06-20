@@ -54,13 +54,13 @@ export const boardServices = ({ db }) => {
       await loadTaskDeps(task)
       return task
     },
-    async addTask ({ status_id, description }) {
+    async addTask ({ description, statusId }) {
       return db('kanban.task')
-        .insert({ description, status_id }).returning('*')
+        .insert({ description, status_id: statusId }).returning('*')
     },
-    async updateTask ({ status_id, description, id }) {
+    async updateTask ({ description, statusId, id }) {
       return db('kanban.task')
-        .update({ description, status_id })
+        .update({ description, status_id: statusId })
         .where({ id }).returning('*')
     },
     async deleteTask (id) {
@@ -73,10 +73,15 @@ export const boardServices = ({ db }) => {
         .where({ person_id: personId, task_id: id })
         .delete().returning('*')
     },
-    async joinTask ({ task_id, person_id }) {
+    async joinTask ({ taskId, personId }) {
       return db('kanban.task_person')
-        .insert({ task_id, person_id })
+        .insert({ task_id: taskId, person_id: personId })
         .returning('*')
+    },
+    async addComment({taskId, personId, content }) {
+      return db("kanban.message")
+        .insert({task_id: taskId, person_id: personId, content})
+        .returning("*")
     }
   }
 }

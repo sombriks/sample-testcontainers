@@ -31,7 +31,7 @@ export const boardRequests = ({ service }) => ({
   components: {
     async addTask (ctx) {
       const { description, status } = ctx.request.body
-      await service.addTask({ description, status_id: status })
+      await service.addTask({ description, statusId: status })
       const model = {
         user: parseUser(ctx.cookies.get('x-user-info')),
         status: await service.findStatus(status),
@@ -42,7 +42,7 @@ export const boardRequests = ({ service }) => ({
     async updateTask (ctx) {
       const { id } = ctx.request.params
       const { description, status } = ctx.request.body
-      await service.updateTask({ id, description, status_id: status })
+      await service.updateTask({ id, description, statusId: status })
       const model = {
         user: parseUser(ctx.cookies.get('x-user-info')),
         status: await service.findStatus(status),
@@ -71,9 +71,17 @@ export const boardRequests = ({ service }) => ({
     async joinTask (ctx) {
       const { id } = ctx.request.params
       const user = parseUser(ctx.cookies.get('x-user-info'))
-      await service.joinTask({ task_id: id, person_id: user.id })
+      await service.joinTask({ taskId: id, personId: user.id })
       const task = await service.findTask(id)
       await ctx.render('components/task-members', { user, task })
+    },
+    async addComment (ctx) {
+      const { id } = ctx.request.params
+      const { content } = ctx.request.body
+      const user = parseUser(ctx.cookies.get('x-user-info'))
+      await service.addComment({ taskId: id, personId: user.id, content })
+      const task = await service.findTask(id)
+      await ctx.render('components/task-comments', { user, task })
     }
   }
 })
