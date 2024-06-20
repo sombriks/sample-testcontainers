@@ -47,18 +47,17 @@ npm run dev
 
 - Unlike _modern_ frontend development, we don't have a build step for code that
   runs on client-side. We're avoiding, however, download pure frontend artifacts
-  and serve them as assets, because we might lose track or our dependencies,
+  and serve them as assets, because we might lose track of our dependencies,
   managed by npm. In spring version, there was [webjars][webjars], so we did a
   similar approach using [koa-static][koa-static] and [koa-mount][koa-mount].
 - [Koa][koa]'s simplicity always amazes me. This is what express was supposed to
   be. Modular. Extensible. Easy to test.
 - Thanks to [xo][xo] we have a simple way to have some code quality _standards_.
   Direct eslint configuration is quite unbearable and [other linter][standard]
-  alternatives seems too strict
-- Node with pure javascript is a breeze to fast prototype and experiment things
-  and throw away. To make code more reliable, testable, however, a few steps are
-  needed otherwise it becomes too rigid and doesn't provide proper ways to swap
-  components with mocks or test-aware versions.
+  alternatives seems too strict.
+- TestContainer setup is quite similar to what we saw on jvm version; it has,
+  however, a distinct idiom to provide the init.sql script needed to create a
+  known state in the database.
 - 
 
 [testcontainers]: https://testcontainers.com
