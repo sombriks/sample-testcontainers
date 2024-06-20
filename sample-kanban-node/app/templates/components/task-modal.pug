@@ -1,0 +1,43 @@
+.modal(id='task-modal-' + task.id, :class="openModal && 'is-active'")
+    .modal-background
+    button.modal-close.is-large(aria-label="close" @click="e => openModal=false")
+    .modal-content.is-overflow-hidden
+        .columns
+            .column.is-two-thirds
+                h1= 'Task #' + task.id
+                .field.is-grouped.is-grouped-right
+                    .control
+                        button.button.is-danger(
+                            hx-swap="outerHTML"
+                            hx-confirm="Are you sure?"
+                            hx-target="#status" + status.id
+                            hx-delete="task/" + task.id)
+                            span.icon
+                                ion-icon(name="trash-outline")
+                form.form(
+                    hx-wap="outerHTML"
+                    hx-target="#task" + task.id
+                    hx-put="task/" + task.id)
+                    input(type="hidden", name="task", value=task.id)
+                    input(type="hidden", name="status", x-ref="form-status-" + task.id, value=status.id)
+                    .field
+                        label.label(for="task-description-" + task.id) Task Description
+                        .control
+                            input.input(
+                                placeholder="Task description"
+                                name="description"
+                                type="text"
+                                required
+                                id="task-description-" + task.id
+                                value=task.description)
+                    .field.is-grouped.is-grouped-right
+                        .control
+                            button.button.is-primary(type="submit")
+                                span.icon
+                                    ion-icon(name="save-outline")
+            .column
+                include ./task-members
+                hr
+                include ./task-comments
+
+

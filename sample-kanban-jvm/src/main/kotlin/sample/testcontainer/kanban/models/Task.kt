@@ -15,8 +15,7 @@ data class Task(
     var created: LocalDateTime? = null,
     @ManyToOne
     var status: Status? = null,
-    @OneToMany
-    @JoinColumn(name = "task_id")
+    @OneToMany(mappedBy = "task", cascade = [CascadeType.ALL], orphanRemoval = true)
     @OrderBy("created desc")
     var messages: List<Message>? = null,
     @ManyToMany

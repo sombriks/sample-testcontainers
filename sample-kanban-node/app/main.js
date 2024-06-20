@@ -44,12 +44,22 @@ export const prepareApp = ({
       })
       b.get('/logout', fakeLogout({ service }))
       b.get('/table', fakeLoginCheck, controller.pages.table)
+      b.path('/task', fakeLoginCheck, b => {
+        b.post(controller.components.addTask)
+        b.path('/:id', b => {
+          b.put(controller.components.updateTask)
+          b.del(controller.components.deleteTask)
+          b.del('/person/:personId', controller.components.removePerson)
+          b.post('/join', controller.components.joinTask)
+        })
+      })
     }).build()
 
   // static assets
   const alpinejs = serve('node_modules/alpinejs/dist')
   const bulma = serve('node_modules/bulma/css')
   const htmx = serve('node_modules/htmx.org/dist')
+  const hxDsInc = serve('node_modules/hx-dataset-include/lib')
   const ionicons = serve('node_modules/ionicons/dist/')
   const _static = serve('app/static')
 
@@ -63,6 +73,7 @@ export const prepareApp = ({
   app.use(mount('/alpinejs', alpinejs))
   app.use(mount('/bulma', bulma))
   app.use(mount('/htmx.org', htmx))
+  app.use(mount('/hx-ds-inc', hxDsInc))
   app.use(mount('/ionicons', ionicons))
 
   return { app, db }

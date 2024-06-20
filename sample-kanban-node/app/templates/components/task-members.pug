@@ -1,0 +1,21 @@
+div(id="task-members-" + task.id)
+    h2 People working on this task
+    .field.is-grouped.is-grouped-multiline
+      each person in task.people
+          .control
+              .tags.has-addons
+                  span.tag(class= person.id == user.id ? 'tag is-primary' : 'tag')= person.name
+                  span.tag.is-delete(
+                      hx-swap="outerHTML"
+                      hx-confirm="Are you sure?"
+                      hx-target="#task-members-" + task.id
+                      hx-delete=`task/${task.id}/person/${person.id}`)
+    unless task.people.find(m => m.id == user.id) != undefined
+        .buttons.is-right
+            button.button.is-primary(
+                hx-swap="outerHTML"
+                hx-target="#task-members-"+task.id
+                hx-post=`task/${task.id}/join`)
+                span.icon
+                    ion-icon(name="person-add-outline")
+                span Join this task

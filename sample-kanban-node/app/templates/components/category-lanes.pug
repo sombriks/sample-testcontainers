@@ -17,8 +17,7 @@
         .card-footer(x-data='{mode:0}')
             button.button.card-footer-item.m-1(
                 x-show="mode==0"
-                @click="mode++"
-            )
+                @click="mode++")
                 span.icon
                     ion-icon(name='add-outline')
             form.card-footer-item(
@@ -26,16 +25,14 @@
                 hx-swap="outerHTML"
                 hx-target="#status"+status.id
                 hx-post="task"
-                @click.outside="mode=0"
-            )
+                @click.outside="mode=0")
                 input(type="hidden", name="status", value=status.id)
                 .field.has-addons
                     .control
                         input.input(
                             type="text"
                             name="description"
-                            placeholder="Describe new task"
-                        )
+                            placeholder="Describe new task")
                     .control
                         button.button.is-info(type="submit")
                             span.icon

@@ -23,7 +23,6 @@
   "scripts": {
     "start": "node index.js",
     "dev": "cross-env NODE_ENV=development nodemon -r dotenv-flow/config",
-    "predev": "npm run lint",
     "test": "cross-env NODE_ENV=test c8 ava",
     "pretest": "npm run lint",
     "lint": "standard --fix"
@@ -35,6 +34,7 @@
     "bulma": "^1.0.1",
     "cabin": "^13.2.6",
     "htmx.org": "^2.0.0",
+    "hx-dataset-include": "^0.0.6",
     "ionicons": "^7.4.0",
     "knex": "^3.1.0",
     "koa": "^2.15.3",

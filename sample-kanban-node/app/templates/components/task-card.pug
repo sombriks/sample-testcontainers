@@ -1,2 +1,38 @@
-article.message.task
+article.message.task(
+    draggable="true"
+    x-data="{openModal:false}"
+    hx-ext="hx-dataset-include"
+    hx-swap="outerHTML"
+    hx-trigger="put-task"
+    id="task" + task.id
+    data-task=task.id
+    data-status=0
+    hx-put=`task/${task.id}`
+    @dragstart="e => e.dataTransfer.setData('text/plain', $el.id)"
+    @update-status.window=`e => {
+        if(e.detail.taskEl == $el) { // needed to filter real target
+            $el.dataset.status = e.detail.lane.dataset.status
+            $refs["form-status-"+$el.dataset.task].value = e.detail.lane.dataset.status
+            $dispatch('put-task', $el.dataset)
+        }
+     }`)
+    .message-header= `#${task.id} - ${task.description}`
+    .message-body.is-flex.is-justify-content-space-between.is-align-content-center
+        //-
+            task and status can either come from th:with/th:each in parent
+            component or from a dedicated router component controller
+
+            "page router" and "component router" are concepts being explored in
+            this sample project.
+        span.icon-text
+            span.icon
+                ion-icon(name="chatbox-ellipses-outline")
+            span= task.messages.length
+            span.icon
+                ion-icon(name="people-circle-outline")
+            span= task.people.length
+        button.button(@click="openModal=true")
+            span.icon
+                ion-icon(name="information-circle-outline")
+    include ./task-modal
 

@@ -7,17 +7,9 @@ html
         link(rel='stylesheet',href='bulma/bulma.css')
         script(type='application/javascript', defer, src='alpinejs/cdn.js')
         script(type='application/javascript', src='htmx.org/htmx.js')
+        script(type='application/javascript', src='hx-ds-inc/hx-dataset-include.js')
         script(type='module', src='ionicons/ionicons/ionicons.esm.js')
         script(type='application/javascript', nomodule='', src='ionicons/ionicons/ionicons.js')
-        script.
-          htmx.defineExtension('hx-dataset-include', {
-            encodeParameters: function (xhr, parameters, elt) {
-              Object
-                .keys(elt.dataset)
-                .forEach(k => parameters
-                  .append(k, elt.dataset[k]))
-            }
-          })
         block in_head
     body(x-data)
         //- adding x-data here makes entire document capable of use alpinejs

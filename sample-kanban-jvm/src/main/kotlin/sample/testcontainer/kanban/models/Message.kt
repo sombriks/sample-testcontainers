@@ -13,8 +13,8 @@ data class Message(
     @Column(updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     var created: LocalDateTime? = null,
-    @ManyToOne
+    @ManyToOne(optional = false)
     var person: Person? = null,
-    @ManyToOne
+    @ManyToOne(optional = false)
     var task: Task? = null,
 )

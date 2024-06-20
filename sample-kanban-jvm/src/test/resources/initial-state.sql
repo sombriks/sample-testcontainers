@@ -36,8 +36,8 @@ create table kanban.message
     task_id   integer   not null,
     content   text      not null,
     created   timestamp not null default current_timestamp,
-    foreign key (person_id) references kanban.person (id),
-    foreign key (task_id) references kanban.task (id)
+    foreign key (person_id) references kanban.person (id) on delete cascade deferrable initially deferred,
+    foreign key (task_id) references kanban.task (id) on delete cascade deferrable initially deferred
 );
 
 -- who is working on what
@@ -46,8 +46,8 @@ create table kanban.task_person
     person_id integer   not null,
     task_id   integer   not null,
     created   timestamp not null default current_timestamp,
-    foreign key (person_id) references kanban.person (id),
-    foreign key (task_id) references kanban.task (id),
+    foreign key (person_id) references kanban.person (id) on delete cascade deferrable initially deferred ,
+    foreign key (task_id) references kanban.task (id) on delete cascade deferrable initially deferred ,
     primary key (person_id, task_id)
 );
 

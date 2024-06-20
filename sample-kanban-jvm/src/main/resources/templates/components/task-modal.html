@@ -12,6 +12,7 @@
                 <div class="field is-grouped is-grouped-right">
                     <div class="control">
                         <button class="button is-danger"
+                                hx-swap="outerHTML"
                                 hx-confirm="Are you sure?"
                                 th:hx-target="'#status'+${status.id}"
                                 th:hx-delete="@{/task/{id}(id=${task.id})}">
