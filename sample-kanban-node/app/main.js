@@ -11,6 +11,7 @@ import {boardRoutes} from './routes/board-routes.js';
 import {boardServices} from './services/board-services.js';
 import {fakeLogin, fakeLoginCheck, fakeLogout} from './routes/cookie-redirect.js';
 
+// Default components
 const _database = prepareDatabase();
 const _service = boardServices({db: _database});
 const _controller = boardRoutes({service: _service});
@@ -22,8 +23,7 @@ const _controller = boardRoutes({service: _service});
  * @param service our service module to do business with
  * @param controller our routes/requests/controllers to validate and handle things
  *
- * @returns {{app: Application, db: import('knex')}}  app and db with all
- * the goodies we will need
+ * @returns {{app: Application, db: import('knex')}}  app and db with all the goodies we will need
  */
 export const prepareApp = ({
 	db: database = _database,

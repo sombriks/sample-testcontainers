@@ -146,43 +146,48 @@ Ava has hooks where you can properly set up and tear down the database. Update
 [database configuration][node-tc] accordingly:
 
 ```javascript
+// app/services/services.spec.js
 import {resolve} from 'node:path';
-import {PostgreSqlContainer} from '@testcontainers/postgresql';
-import request from 'supertest';
 import test from 'ava';
-import {prepareApp} from './main.js';
-import {prepareDatabase} from './configs/database.js';
+import {PostgreSqlContainer} from '@testcontainers/postgresql';
+import {prepareDatabase} from '../configs/database.js';
+import {boardServices} from './board-services.js';
 
 test.before(async t => {
-	t.context.postgres = await new PostgreSqlContainer('postgres:16.3-alpine3.20')
-		.withDatabase(process.env.PG_DATABASE)
-		.withUsername(process.env.PG_USERNAME)
-		.withPassword(process.env.PG_PASSWORD)
-		.withBindMounts([{
-			source: resolve('../sample-kanban-jvm/src/test/resources/initial-state.sql'),
-			target: '/docker-entrypoint-initdb.d/init.sql',
-		}])
-		.start();
-	t.context.db = prepareDatabase(t.context.postgres.getConnectionUri());
-	const {app} = prepareApp({db: t.context.db});
-	t.context.callback = app.callback();
+  // Testcontainer setup
+  t.context.postgres = await new PostgreSqlContainer('postgres:16.3-alpine3.20')
+    .withDatabase(process.env.PG_DATABASE)
+    .withUsername(process.env.PG_USERNAME)
+    .withPassword(process.env.PG_PASSWORD)
+    .withBindMounts([{
+      source: resolve(process.env.PG_INIT_SCRIPT),
+      target: '/docker-entrypoint-initdb.d/init.sql',
+    }])
+    .start();
+
+  // Application setup properly tailored for tests
+  const database = prepareDatabase(t.context.postgres.getConnectionUri());
+  const service = boardServices({db: database});
+
+  // Context register for proper teardown
+  t.context.db = database;
+  t.context.service = service;
 });
 
 test.after.always(async t => {
-	await t.context.db.destroy();
-	await t.context.postgres.stop({timeout: 500});
+  // teardown 
+  await t.context.db.destroy();
+  await t.context.postgres.stop({timeout: 500});
 });
 
-test('app should be ok', async t => {
-	const result = await request(t.context.callback).get('/');
-	t.is(result.status, 302);
-	t.is(result.headers.location, '/board');
+test('should list people', async t => {
+  const people = await t.context.service.listUsers();
+  t.is(people.length, 5); // we know there are 5 people
 });
 
-test('should serve login and have users', async t => {
-	const result = await request(t.context.callback).get('/login');
-	t.is(result.status, 200);
-	t.regex(result.text, /Alice|Bob/);
+test('should list tasks', async t => {
+  const tasks = await t.context.service.listTasks();
+  t.is(tasks.length, 5);
 });
 ```
 
@@ -197,8 +202,23 @@ export const pug = new Pug({
 });
 ```
 
-But for proper testing you must provide as much inversion of control, dependency
-injection (the **D** in *SOLID*)
+But for proper testing you must provide inversion of control, dependency
+injection (the **D** in *SOLID*):
+
+```javascript
+import Knex from 'knex'
+
+// we can get a Knex instance either pointing to postgres from env or provide a
+// custom connection string.
+export const prepareDatabase = (connection = process.env.PG_CONNECTION_URL) => Knex({
+	client: 'pg',
+	connection,
+})
+```
+
+Besides that implementation detail, everything else should work under test the
+same way it works during development or in production. sampe code, no mocks,
+same database engine, same dialect.
 
 ### Sample code - Echo/Goqu/Testify
 

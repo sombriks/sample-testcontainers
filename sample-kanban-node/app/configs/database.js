@@ -3,11 +3,11 @@ import Knex from 'knex';
 /**
  * Provision our query builder instance
  *
- * @param dsn connection string
+ * @param connection database connection string
  *
- * @returns {Knex<any, unknown[]>} knex query builder instance
+ * @returns {Knex} knex query builder instance
  */
-export const prepareDatabase = (dsn = process.env.PG_CONNECTION_URL) => Knex({
-	connection: dsn,
+export const prepareDatabase = (connection = process.env.PG_CONNECTION_URL) => Knex({
 	client: 'pg',
+	connection,
 });

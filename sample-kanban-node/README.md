@@ -13,9 +13,10 @@ purposes using [TestContainers][testcontainers]
 - [bulma 1][bulma]
 - [htmx.org 2][htmx]
 - [alpine.js 3][alpinejs]
-- [ava 6][ava]
 - [xo 0.58][xo]
-- and of course [@testcontainers/postgresql 10][pgtc]
+- [ava 6][ava]
+- [supertest 7][supertest]
+- and of course [@testcontainers/postgresql 10][postgres-testcontainers]
 
 There are a few others, check the [package.json][package.json] for details.
 
@@ -45,6 +46,8 @@ npm run dev
 
 ## Noteworthy
 
+- Small but important reminder, this code is quite experimental and aims to
+  showcase testcontainers, not the best Node.js practices. You where warned!
 - Unlike _modern_ frontend development, we don't have a build step for code that
   runs on client-side. We're avoiding, however, download pure frontend artifacts
   and serve them as assets, because we might lose track of our dependencies,
@@ -58,7 +61,12 @@ npm run dev
 - TestContainer setup is quite similar to what we saw on jvm version; it has,
   however, a distinct idiom to provide the init.sql script needed to create a
   known state in the database.
-- 
+- Always remember that everything that executes in a node project has the point
+  of execution, entrypoint, you name it, in the same folder as the package.json,
+  the project root in other words. This is why in the `.withBindMounts` call the
+  path to sql script in the other project jumps just one folder up and not two.
+  This is why `koa-static` doesn't need to jump up no folder when mapping the
+  frontend libs in _node_modules_.
 
 [testcontainers]: https://testcontainers.com
 [node]: https://nodejs.org
@@ -69,10 +77,11 @@ npm run dev
 [bulma]: https://bulma.io/documentation/
 [htmx]: https://htmx.org/docs/#introduction
 [alpinejs]: https://alpinejs.dev
-[ava]: https://avajs.dev/
 [xo]: https://github.com/xojs/xo
+[ava]: https://avajs.dev/
+[supertest]: https://github.com/ladjs/supertest
 [standard]: https://standardjs.com/
-[pgtc]: https://testcontainers.com/modules/postgresql/
+[postgres-testcontainers]: https://testcontainers.com/modules/postgresql/
 [package.json]: ./package.json
 [webjars]: https://www.webjars.org/
 [koa-static]: https://www.npmjs.com/package/koa-static
