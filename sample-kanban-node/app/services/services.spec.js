@@ -3,18 +3,11 @@ import test from 'ava';
 import {PostgreSqlContainer} from '@testcontainers/postgresql';
 import {prepareDatabase} from '../configs/database.js';
 import {boardServices} from './board-services.js';
+import { preparePostgres } from '../configs/test-container.js'
 
 test.before(async t => {
-	// Testcontainer setup
-	t.context.postgres = await new PostgreSqlContainer('postgres:16.3-alpine3.20')
-		.withDatabase(process.env.PG_DATABASE)
-		.withUsername(process.env.PG_USERNAME)
-		.withPassword(process.env.PG_PASSWORD)
-		.withBindMounts([{
-			source: resolve(process.env.PG_INIT_SCRIPT),
-			target: '/docker-entrypoint-initdb.d/init.sql',
-		}])
-		.start();
+	// TestContainer setup
+	t.context.postgres = await preparePostgres()
 
 	// Application setup properly tailored for tests
 	const database = prepareDatabase(t.context.postgres.getConnectionUri());
