@@ -1,7 +1,21 @@
 package main
 
-import "fmt"
+import (
+	_ "github.com/joho/godotenv/autoload"
+	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app"
+	"log"
+)
 
 func main() {
-	fmt.Println("hello")
+	server, err := app.NewKanbanServer(nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// check db
+	err = server.CheckDb()
+	if err != nil {
+		log.Fatal(err)
+	}
+	// spin up server
+	log.Fatal(server.Listen())
 }

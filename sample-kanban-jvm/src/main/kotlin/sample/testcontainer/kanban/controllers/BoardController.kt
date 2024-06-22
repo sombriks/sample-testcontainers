@@ -17,7 +17,7 @@ import sample.testcontainer.kanban.models.to.MessageTO
 import sample.testcontainer.kanban.models.to.TaskStatusTO
 import sample.testcontainer.kanban.services.BoardService
 
-@Controller // not a RestController, we want to render views
+@Controller // not a RestController (json), we want to render views (hypermedia)
 @RequestMapping("/")
 class BoardController(private val boardService: BoardService) {
 

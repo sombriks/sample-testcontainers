@@ -15,7 +15,6 @@ purposes using [TestContainers][testcontainers]
 - [alpine.js 3.14][alpinejs]
 - [testify 1.9][testify]
 - [godotenv 1.5][godotenv] to simplify configuration
-- [air 1.52][air] for live reload
 - and of course [testcontainers for go][go-testcontainers]
 
 Make sure you have $HOME/go/bin in your $PATH.
@@ -28,7 +27,28 @@ go build .
 
 ## How to test
 
+```bash
+go test -cover -v ./...
+```
+
 ## How to run
+
+Make sure that you have a valid and running postgresql accepting the proper
+[credentials configured in the .env file][env]. If you don't want to configure a
+postgresql yourself, check the [docker compose file][compose] in the
+infrastructure folder.
+
+If you build the project, run the binary:
+
+```bash
+./sample-kanban-go
+```
+
+But you simply can run the entrypoint:
+
+```bash
+go run main.go
+```
 
 ## Noteworthy
 
@@ -36,7 +56,11 @@ go build .
   follows [SOLID][solid] standards as much as possible. It's a deliberate choice
   because go documented recommendation is a bad design and can lead quickly to
   mental fatigue.
-- 
+- Thanks to [godotenv][godotenv] we have an environment-aware configuration
+  strategy almost as flexible as the jvm version.
+- GO packages are very different from classpath or node ESM/CJS. For instance,
+  they are their own point of execution, so the project root is not what you
+  expect it to be.
 
 [testcontainers]: https://testcontainers.com/
 [go]: https://go.dev/
@@ -53,3 +77,5 @@ go build .
 [go-testcontainers]: https://golang.testcontainers.org/modules/postgres/
 [go-project-structure]: https://go.dev/doc/modules/layout
 [solid]: https://en.wikipedia.org/wiki/SOLID
+[env]: ./.env
+[compose]: ../infrastructure/docker-compose.yml

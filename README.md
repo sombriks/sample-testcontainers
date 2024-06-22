@@ -155,48 +155,80 @@ Ava has hooks where you can properly set up and tear down the database. Update
 [database configuration][node-tc] accordingly:
 
 ```javascript
-// app/services/services.spec.js
+// in app/configs/hook-test-container.js
 import {resolve} from 'node:path';
-import test from 'ava';
 import {PostgreSqlContainer} from '@testcontainers/postgresql';
-import {prepareDatabase} from '../configs/database.js';
-import {boardServices} from './board-services.js';
+
+/**
+ * Helper to provision a postgresql for testing purposes
+ *
+ * @returns {Promise<StartedPostgreSqlContainer>} database container
+ */
+export const preparePostgres = async () => new PostgreSqlContainer('postgres:16.3-alpine3.20')
+  .withDatabase(process.env.PG_DATABASE)
+  .withUsername(process.env.PG_USERNAME)
+  .withPassword(process.env.PG_PASSWORD)
+  .withBindMounts([{
+    source: resolve(process.env.PG_INIT_SCRIPT),
+    target: '/docker-entrypoint-initdb.d/init.sql',
+  }])
+  .start();
+```
+
+A quick note, but the node postgresql container has a distinct idiom for the
+initial script when compared with jvm or golang versions. Those have a
+`withInitScript` builder call, while node version offer a more generic
+`withBindMounts` call.
+
+You then integrate the test container provisioning into your ava test like this:
+
+```javascript
+// in app/app.spec.js
+import request from 'supertest';
+import test from 'ava';
+import {prepareApp} from './main.js';
+import {prepareDatabase} from './configs/database.js';
+import {boardServices} from './services/board-services.js';
+import {boardRoutes} from './routes/board-routes.js';
+import {preparePostgres} from './configs/hook-test-container.js';
 
 test.before(async t => {
-  // Testcontainer setup
-  t.context.postgres = await new PostgreSqlContainer('postgres:16.3-alpine3.20')
-    .withDatabase(process.env.PG_DATABASE)
-    .withUsername(process.env.PG_USERNAME)
-    .withPassword(process.env.PG_PASSWORD)
-    .withBindMounts([{
-      source: resolve(process.env.PG_INIT_SCRIPT),
-      target: '/docker-entrypoint-initdb.d/init.sql',
-    }])
-    .start();
+	// TestContainer setup
+	t.context.postgres = await preparePostgres();
 
-  // Application setup properly tailored for tests
-  const database = prepareDatabase(t.context.postgres.getConnectionUri());
-  const service = boardServices({db: database});
+	// Application setup properly tailored for tests
+	const database = prepareDatabase(t.context.postgres.getConnectionUri());
+	const service = boardServices({db: database});
+	const controller = boardRoutes({service});
 
-  // Context register for proper teardown
-  t.context.db = database;
-  t.context.service = service;
+	const {app} = prepareApp({db: database, service, controller});
+
+	// Context registering for proper teardown
+	t.context.db = database;
+	t.context.app = app;
 });
 
 test.after.always(async t => {
-  // teardown 
-  await t.context.db.destroy();
-  await t.context.postgres.stop({timeout: 500});
+	await t.context.db.destroy();
+	await t.context.postgres.stop({timeout: 500});
 });
 
-test('should list people', async t => {
-  const people = await t.context.service.listUsers();
-  t.is(people.length, 5); // we know there are 5 people
+test('app should be ok', async t => {
+	const result = await request(t.context.app.callback()).get('/');
+	t.is(result.status, 302);
+	t.is(result.headers.location, '/board');
 });
 
-test('should list tasks', async t => {
-  const tasks = await t.context.service.listTasks();
-  t.is(tasks.length, 5);
+test('db should be ok', async t => {
+	const {rows: [{result}]} = await t.context.db.raw('SELECT 1 + 1 as result');
+	t.truthy(result);
+	t.is(result, 2);
+});
+
+test('should serve login and have users', async t => {
+	const result = await request(t.context.app.callback()).get('/login');
+	t.is(result.status, 200);
+	t.regex(result.text, /Alice|Bob|Caesar|Davide|Edward/);
 });
 ```
 
@@ -204,30 +236,39 @@ Mind to write proper testable code: it's very tempting to just create and export
 your objects directly from modules:
 
 ```javascript
+// in app/configs/views.js
+import {resolve} from 'node:path';
 import Pug from 'koa-pug';
 
 export const pug = new Pug({
-	viewPath: 'app/templates', // TODO use import.meta.url thing
+  viewPath: resolve('./app/templates'),
 });
 ```
 
+It's pretty fine most of the time, templates directory isn't likely to become a
+configurable thing, so it's ok.
+
 But for proper testing you must provide inversion of control, dependency
-injection (the **D** in *SOLID*):
+inversion, the **D** in *[SOLID][solid]*:
 
 ```javascript
-import Knex from 'knex'
+// in app/configs/database.js
+import Knex from 'knex';
 
-// we can get a Knex instance either pointing to postgres from env or provide a
-// custom connection string.
 export const prepareDatabase = (connection = process.env.PG_CONNECTION_URL) => Knex({
-	client: 'pg',
-	connection,
-})
+  client: 'pg',
+  connection,
+});
 ```
 
+The `prepareDatabase` call let us send any connection string we want for the
+database, quite useful when we are spinning up a postgres container, but if none
+is provided it will rely on what we have configured in the environment under the
+`PG_CONNECTION_URL` variable.
+
 Besides that implementation detail, everything else should work under test the
-same way it works during development or in production. sampe code, no mocks,
-same database engine, same dialect.
+same way it works during development or in production. same code, no mocks, same
+database engine, same dialect, same thing.
 
 ### Sample code - Echo/Goqu/Testify
 
@@ -256,3 +297,5 @@ Happy hacking!
 [repo]: https://github.com/sombriks/sample-testcontainers
 [testcontainers]: https://testcontainers.com/
 [node-tc]: https://testcontainers.com/guides/getting-started-with-testcontainers-for-nodejs/
+[solid]: https://en.wikipedia.org/wiki/Dependency_inversion_principle
+
