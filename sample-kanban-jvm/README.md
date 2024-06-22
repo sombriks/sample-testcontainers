@@ -14,7 +14,7 @@ purposes using [TestContainers][testcontainers]
 - [alpinejs 3][alpinejs] (via webjars)
 - and of course [TestContainers 1.19][testcontainers]
 
-## How to build
+## How to build and test
 
 ```bash
 ./gradlew clean build bootJar

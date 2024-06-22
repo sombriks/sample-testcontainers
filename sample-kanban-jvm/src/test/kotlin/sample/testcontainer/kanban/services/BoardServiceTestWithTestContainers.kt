@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 import sample.testcontainer.kanban.TestcontainersConfiguration
 import sample.testcontainer.kanban.models.Message
@@ -15,6 +16,7 @@ import sample.testcontainer.kanban.repositories.PersonRepository
 import kotlin.test.assertNotNull
 
 @SpringBootTest
+@ActiveProfiles("test")
 @Import(TestcontainersConfiguration::class)
 class BoardServiceTestWithTestContainers {
 
