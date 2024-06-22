@@ -11,8 +11,9 @@ html
         script(type='module', src='ionicons/ionicons/ionicons.esm.js')
         script(type='application/javascript', nomodule='', src='ionicons/ionicons/ionicons.js')
         block in_head
-    body(x-data)
+    body(x-data,hx-boost)
         //- adding x-data here makes entire document capable of use alpinejs
+        //- adding hx-boost makes progressive enhancements in the application
         .container.is-max-widescreen
             if user != null
                 nav.navbar

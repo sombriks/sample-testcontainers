@@ -1,13 +1,11 @@
-import {resolve} from 'node:path';
 import test from 'ava';
-import {PostgreSqlContainer} from '@testcontainers/postgresql';
 import {prepareDatabase} from '../configs/database.js';
+import {preparePostgres} from '../configs/hook-test-container.js';
 import {boardServices} from './board-services.js';
-import { preparePostgres } from '../configs/test-container.js'
 
 test.before(async t => {
 	// TestContainer setup
-	t.context.postgres = await preparePostgres()
+	t.context.postgres = await preparePostgres();
 
 	// Application setup properly tailored for tests
 	const database = prepareDatabase(t.context.postgres.getConnectionUri());

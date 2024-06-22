@@ -12,7 +12,8 @@ purposes using [TestContainers][testcontainers]
 - [bulma 1][bulma] (via [webjars][webjars])
 - [htmx.org 2][htmx] (via webjars)
 - [alpinejs 3][alpinejs] (via webjars)
-- and of course [TestContainers 1.19][testcontainers]
+- [jacoco plugin][jacoco] for coverage
+- and of course [TestContainers 1.19][testcontainers] for the jvm
 
 ## How to build and test
 
@@ -77,6 +78,7 @@ Or:
 [bulma]: https://bulma.io/documentation/
 [webjars]: https://www.webjars.org/
 [htmx]: https://htmx.org/docs/#introduction
+[jacoco]: https://docs.gradle.org/current/userguide/jacoco_plugin.html
 [infrastructure]: ../infrastructure/docker-compose.yml
 [initializr]: <https://start.spring.io/#!type=gradle-project-kotlin&language=kotlin&platformVersion=3.3.0&packaging=jar&jvmVersion=17&groupId=sample.testcontainer&artifactId=kanban&name=sample-kanban-jvm&description=Demo%20project%20for%20Spring%20Boot%2C%20Kotlin%20and%20TestContainers&packageName=sample.testcontainer.kanban&dependencies=web,testcontainers,postgresql,thymeleaf,data-jpa>
 [sql]: ./src/test/resources/initial-state.sql

@@ -31,8 +31,9 @@
     </script>
     <th:block layout:fragment="head"/>
 </head>
-<body x-data>
+<body x-data hx-boost>
 <!--/* adding x-data here makes entire document capable of use alpinejs */-->
+<!--/* adding hx-boost makes progressive enhancements in the application */-->
 <div class="container is-max-widescreen">
     <nav class="navbar" th:if="${user} != null">
         <div class="navbar-menu">
