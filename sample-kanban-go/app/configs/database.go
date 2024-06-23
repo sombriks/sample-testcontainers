@@ -29,8 +29,10 @@ func NewGoquDb(d *DbProps, dsn *string) (*goqu.Database, error) {
 	if err != nil {
 		return nil, err
 	}
-	goqu := goqu.New("postgres", con)
-	goqu.Logger(log.Default())
+	// https://doug-martin.github.io/goqu/docs/selecting.html#scan-struct
+	goqu.SetIgnoreUntaggedFields(true)
+	db := goqu.New("postgres", con)
+	db.Logger(log.Default())
 
-	return goqu, nil
+	return db, nil
 }

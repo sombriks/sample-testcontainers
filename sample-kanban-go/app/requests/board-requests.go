@@ -1,10 +1,13 @@
 package requests
 
 import (
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/models"
 	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/services"
 	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/templates/pages"
 	"log"
+	"net/http"
 )
 
 type BoardRequest struct {
@@ -18,33 +21,61 @@ func NewBoardRequest(service *services.BoardService) (*BoardRequest, error) {
 	return request, nil
 }
 
+func getUser(c echo.Context) *models.Person {
+	inContext := c.Get("user")
+	if inContext == nil {
+		return nil
+	}
+	return (inContext).(*models.Person)
+}
+
+// Index - simple redirect to board page
 func (r *BoardRequest) Index(c echo.Context) error {
 	return c.Redirect(302, "/board")
 }
 
+// BoardPage - route to provision and serve the kanban board page
 func (r *BoardRequest) BoardPage(c echo.Context) error {
-
-	return pages.Board(c)
+	user := getUser(c)
+	return pages.BoardPage(user).Render(c.Response().Writer)
 }
 
 func (r *BoardRequest) LoginPage(c echo.Context) error {
-	return pages.Login(c)
+	user := getUser(c)
+	people, err := r.service.ListPeople("")
+	if err != nil {
+		return err
+	}
+	return pages.Login(user, people).Render(c.Response().Writer)
 }
 
 func (r *BoardRequest) FakeLogin(c echo.Context) error {
-
-	return c.HTML(200, "ok - login")
+	userId := c.FormValue("userId")
+	var id int64
+	_, _ = fmt.Sscan(userId, &id)
+	user, _ := r.service.FindPerson(id)
+	cookie := http.Cookie{
+		Name:  "x-user-info",
+		Value: user.UserToCookie(),
+	}
+	c.SetCookie(&cookie)
+	return c.Redirect(302, "/board")
 }
 
 func (r *BoardRequest) FakeLogout(c echo.Context) error {
-
-	return c.HTML(200, "ok - login")
+	cookie, err := c.Cookie("x-user-info")
+	if err != nil {
+		log.Println("[WARN] ", err.Error())
+		return c.Redirect(302, "/login")
+	}
+	cookie.Value = ""
+	c.SetCookie(cookie)
+	return c.Redirect(302, "/login")
 }
 
 func (r *BoardRequest) CookieCheck(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		cookie, err := c.Cookie("x-user-info")
-		log.Println(cookie)
 		if err != nil {
 			log.Println("[WARN] ", err.Error())
 			return c.Redirect(302, "/login")
@@ -52,13 +83,14 @@ func (r *BoardRequest) CookieCheck(next echo.HandlerFunc) echo.HandlerFunc {
 		if cookie == nil || cookie.Value == "" {
 			return c.Redirect(302, "/login")
 		}
+		c.Set("user", models.UserFromCookie(cookie.Value))
 		return next(c)
 	}
 }
 
 func (r *BoardRequest) TablePage(c echo.Context) error {
-
-	return pages.Table(c)
+	user := getUser(c)
+	return pages.TablePage(user).Render(c.Response().Writer)
 }
 
 func (r *BoardRequest) AddTask(c echo.Context) error {

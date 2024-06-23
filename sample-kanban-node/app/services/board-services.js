@@ -25,7 +25,7 @@ export const boardServices = ({db}) => {
 				.whereILike('name', `%${q}%`)
 				.orderBy('name');
 		},
-		async findUser(id) {
+		async findPerson(id) {
 			return db('kanban.person').where({id}).first();
 		},
 		async listStatuses() {

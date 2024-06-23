@@ -21,7 +21,7 @@ export const cookieCheck = async (context, next) => { // Simple redirect if the 
  */
 export const fakeLogin = ({service}) => async context => {
 	const {userId} = context.request.body;
-	const user = await service.findUser(userId);
+	const user = await service.findPerson(userId);
 	context.cookies.set('x-user-info', `name=${user.name}&id=${user.id}`);
 	return context.redirect('/board');
 };

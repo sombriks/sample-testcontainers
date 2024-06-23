@@ -7,4 +7,7 @@ type Task struct {
 	StatusId    int64     `db:"status_id"`
 	Description string    `db:"description"`
 	Created     time.Time `db:"created" goqu:"omitnil"`
+	Status      *Status
+	Messages    *[]Message
+	people      *[]Person
 }

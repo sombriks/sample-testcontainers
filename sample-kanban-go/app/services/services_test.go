@@ -78,8 +78,26 @@ func (s *ServiceTestSuit) TearDownSuite() {
 }
 
 func (s *ServiceTestSuit) TestShouldListPeople() {
-
-	people, err := s.service.ListPerson("")
+	people, err := s.service.ListPeople("")
 	s.Nil(err)
 	s.Len(*people, 5)
+}
+
+func (s *ServiceTestSuit) TestShouldFindPeople() {
+	person, err := s.service.FindPerson(2)
+	s.Nil(err)
+	s.Equal("Bob", person.Name)
+}
+
+func (s *ServiceTestSuit) TestShouldListTasks() {
+	tasks, err := s.service.ListTasks("")
+	s.Nil(err)
+	s.Len(*tasks, 5)
+}
+
+func (s *ServiceTestSuit) TestShouldFindTask() {
+	task, err := s.service.FindTask(1)
+	s.Nil(err)
+	s.Equal("design", task.Description)
+	s.Equal(int64(2), task.StatusId)
 }

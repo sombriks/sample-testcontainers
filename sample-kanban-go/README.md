@@ -56,11 +56,31 @@ go run main.go
   follows [SOLID][solid] standards as much as possible. It's a deliberate choice
   because go documented recommendation is a bad design and can lead quickly to
   mental fatigue.
-- Thanks to [godotenv][godotenv] we have an environment-aware configuration
+- Thanks to [godotenv][godotenv], we have an environment-aware configuration
   strategy almost as flexible as the jvm version.
 - GO packages are very different from classpath or node ESM/CJS. For instance,
   they are their own point of execution, so the project root is not what you
   expect it to be.
+- Like the node version, we're not using any [DI container][di] in this sample.
+  Because of that, mind you configuration phase, write testable code, provide as
+  much inversion of control points as possible while providing reasonable
+  default values.
+- [goqu][goqu] query builder resembles [knex][knex] query builder a little and, 
+  just like we did on node project, it's up to us solve the select [N+1][n+1]
+  cases, which affects mainly the `task` and `message` models.
+- Unlike other two projects, the template language isn't a markup language but
+  golang itself. The [gomponents][gomponents] library isn't exactly a new idea
+  but looks funny see how it goes in this exercise.
+- Another discrepancy of this implementation is the use of static resources to
+  serve unversioned frontend libraries. In jvm version there where
+  [webjars][webjars], in node version we served versioned libraries directly
+  from [node_modules][node_modules, nothing similar is available for go projects
+  by the time of this writing.
+- Note that `//go:embed static` and `// go:embed static` are not the same thing.
+- There is a tool called [air][air] that delivers similar experience on go
+  projects that [nodemon][nodemon] delivers on node projects. It's completely
+  optional and independent of project dependencies but it worth the
+  configuration effort.
 
 [testcontainers]: https://testcontainers.com/
 [go]: https://go.dev/
@@ -79,3 +99,9 @@ go run main.go
 [solid]: https://en.wikipedia.org/wiki/SOLID
 [env]: ./.env
 [compose]: ../infrastructure/docker-compose.yml
+[di]: https://martinfowler.com/articles/injection.html
+[knex]: https://knexjs.org
+[n+1]: https://stackoverflow.com/a/39696775/420096
+[webjars]: https://www.webjars.org/
+[node_modules]: https://docs.npmjs.com/cli/v7/configuring-npm/folders#node-modules
+[nodemon]: https://nodemon.io/

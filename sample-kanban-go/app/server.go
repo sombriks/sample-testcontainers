@@ -1,6 +1,7 @@
 package app
 
 import (
+	"embed"
 	"errors"
 	"fmt"
 	"github.com/doug-martin/goqu/v9"
@@ -10,6 +11,7 @@ import (
 	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/requests"
 	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/services"
 	"log"
+	"net/http"
 	"os"
 )
 
@@ -20,7 +22,11 @@ type KanbanServer struct {
 	e          *echo.Echo
 }
 
+//go:embed static
+var staticFS embed.FS
+
 func NewKanbanServer(db *goqu.Database) (*KanbanServer, error) {
+	// configuration phase
 	var err error
 
 	if db == nil {
@@ -30,10 +36,12 @@ func NewKanbanServer(db *goqu.Database) (*KanbanServer, error) {
 			return nil, err
 		}
 	}
+
 	service, err := services.NewBoardService(db)
 	if err != nil {
 		return nil, err
 	}
+
 	controller, err := requests.NewBoardRequest(service)
 	if err != nil {
 		return nil, err
@@ -41,32 +49,29 @@ func NewKanbanServer(db *goqu.Database) (*KanbanServer, error) {
 
 	e := echo.New()
 
-	// configuration phase
-	server := &KanbanServer{
-		controller: controller,
-		service:    service,
-		db:         db,
-		e:          e,
-	}
-
 	// Middlewares
-	server.e.Use(middleware.Logger())
-	server.e.Use(middleware.Recover())
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+		Filesystem: http.FS(staticFS),
+		Root:       "static",
+		//Browse:     true,
+	}))
 
 	// routes/requests
-	server.e.GET("/", controller.Index)
+	e.GET("/", controller.Index)
 
-	server.e.GET("/board", controller.BoardPage, controller.CookieCheck)
+	e.GET("/board", controller.BoardPage, controller.CookieCheck)
 
-	login := server.e.Group("/login")
+	login := e.Group("/login")
 	login.GET("", controller.LoginPage)
 	login.POST("", controller.FakeLogin)
 
-	server.e.GET("/logout", controller.FakeLogout)
+	e.GET("/logout", controller.FakeLogout)
 
-	server.e.GET("/table", controller.TablePage, controller.CookieCheck)
+	e.GET("/table", controller.TablePage, controller.CookieCheck)
 
-	task := server.e.Group("/task", controller.CookieCheck)
+	task := e.Group("/task", controller.CookieCheck)
 	task.POST("/", controller.AddTask)
 
 	taskId := task.Group("/:id")
@@ -75,6 +80,13 @@ func NewKanbanServer(db *goqu.Database) (*KanbanServer, error) {
 	taskId.DELETE("/person/:personId", controller.DeleteTask)
 	taskId.POST("/join", controller.JoinTask)
 	taskId.POST("/comments", controller.AddComent)
+
+	server := &KanbanServer{
+		controller: controller,
+		service:    service,
+		db:         db,
+		e:          e,
+	}
 
 	return server, nil
 }

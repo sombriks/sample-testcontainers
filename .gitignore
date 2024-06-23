@@ -2,4 +2,5 @@ build
 coverage
 .gradle
 node_modules
+tmp
 sample-kanban-go/sample-kanban-go
