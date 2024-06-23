@@ -3,7 +3,7 @@ package requests
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/services"
-	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/templates/layouts"
+	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/templates/pages"
 	"log"
 )
 
@@ -23,12 +23,11 @@ func (r *BoardRequest) Index(c echo.Context) error {
 
 func (r *BoardRequest) BoardPage(c echo.Context) error {
 
-	return layouts.MainPage("Board").Render(c.Response().Writer)
+	return pages.Board(c)
 }
 
 func (r *BoardRequest) LoginPage(c echo.Context) error {
-
-	return layouts.MainPage("Login").Render(c.Response().Writer)
+	return pages.Login(c)
 }
 
 func (r *BoardRequest) FakeLogin(c echo.Context) error {
@@ -58,7 +57,7 @@ func (r *BoardRequest) CookieCheck(next echo.HandlerFunc) echo.HandlerFunc {
 
 func (r *BoardRequest) TablePage(c echo.Context) error {
 
-	return layouts.MainPage("Table").Render(c.Response().Writer)
+	return pages.Table(c)
 }
 
 func (r *BoardRequest) AddTask(c echo.Context) error {
