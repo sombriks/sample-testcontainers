@@ -6,6 +6,7 @@ import (
 	"log"
 )
 
+// main - service entrypoint
 func main() {
 	server, err := app.NewKanbanServer(nil)
 	if err != nil {

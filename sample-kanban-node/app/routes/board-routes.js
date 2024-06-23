@@ -1,6 +1,6 @@
 /**
  * Returns the configured requests to deliver the board pages and components
- * @param {{service}} options config object containing reference to the service
+ * @param {{service}} options configs object containing reference to the service
  * @returns {*&{components: {}, pages: {login(*): Promise<*>, board(*): Promise<void>, table(*): Promise<*>}}}
  */
 export const boardRoutes = ({service}) => ({

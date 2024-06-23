@@ -9,7 +9,7 @@ import {prepareDatabase} from './configs/database.js';
 import {pug} from './configs/views.js';
 import {boardRoutes} from './routes/board-routes.js';
 import {boardServices} from './services/board-services.js';
-import {fakeLogin, fakeLoginCheck, fakeLogout} from './routes/cookie-redirect.js';
+import {fakeLogin, cookieCheck, fakeLogout} from './routes/cookie-redirect.js';
 
 // Default components
 const _database = prepareDatabase();
@@ -36,14 +36,14 @@ export const prepareApp = ({
 	const router = new ApiBuilder({router: new Router()})
 		.path(b => {
 			b.get('/', async context => context.redirect('/board'));
-			b.get('/board', fakeLoginCheck, controller.pages.board);
+			b.get('/board', cookieCheck, controller.pages.board);
 			b.path('/login', b => {
 				b.get(controller.pages.login);
 				b.post(fakeLogin({service}));
 			});
 			b.get('/logout', fakeLogout({service}));
-			b.get('/table', fakeLoginCheck, controller.pages.table);
-			b.path('/task', fakeLoginCheck, b => {
+			b.get('/table', cookieCheck, controller.pages.table);
+			b.path('/task', cookieCheck, b => {
 				b.post(controller.components.addTask);
 				b.path('/:id', b => {
 					b.put(controller.components.updateTask);

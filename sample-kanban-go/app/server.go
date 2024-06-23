@@ -6,7 +6,7 @@ import (
 	"github.com/doug-martin/goqu/v9"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/config"
+	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/configs"
 	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/requests"
 	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/services"
 	"log"
@@ -25,7 +25,7 @@ func NewKanbanServer(db *goqu.Database) (*KanbanServer, error) {
 
 	if db == nil {
 		log.Println("db is nil, provisioning a default one")
-		db, err = config.NewGoquDb()
+		db, err = configs.NewGoquDb()
 		if err != nil {
 			return nil, err
 		}
@@ -54,17 +54,27 @@ func NewKanbanServer(db *goqu.Database) (*KanbanServer, error) {
 	server.e.Use(middleware.Recover())
 
 	// routes/requests
-	server.e.GET("/", func(c echo.Context) error {
-		return c.Redirect(302, "/board")
-	})
+	server.e.GET("/", controller.Index)
 
-	server.e.GET("/board", controller.BoardPage)
-	server.e.GET("/table", controller.TablePage)
+	server.e.GET("/board", controller.BoardPage, controller.CookieCheck)
 
 	login := server.e.Group("/login")
 	login.GET("", controller.LoginPage)
+	login.POST("", controller.FakeLogin)
 
-	task := server.e.Group("/task")
+	server.e.GET("/logout", controller.FakeLogout)
+
+	server.e.GET("/table", controller.TablePage, controller.CookieCheck)
+
+	task := server.e.Group("/task", controller.CookieCheck)
+	task.POST("/", controller.AddTask)
+
+	taskId := task.Group("/:id")
+	taskId.PUT("/", controller.UpdateTask)
+	taskId.DELETE("/", controller.DeleteTask)
+	taskId.DELETE("/person/:personId", controller.DeleteTask)
+	taskId.POST("/join", controller.JoinTask)
+	taskId.POST("/comments", controller.AddComent)
 
 	return server, nil
 }

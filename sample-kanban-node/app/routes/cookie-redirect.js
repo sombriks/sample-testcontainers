@@ -5,12 +5,11 @@
  * @param {Function} next handler to call next middleware
  * @returns {Promise<*>}
  */
-export const fakeLoginCheck = async (context, next) => { // Simple redirect if the cookie is there or not
+export const cookieCheck = async (context, next) => { // Simple redirect if the cookie is there or not
 	const userMaybe = context.cookies.get('x-user-info');
 	if (userMaybe) {
 		return next(context);
 	}
-
 	return context.redirect('/login');
 };
 
