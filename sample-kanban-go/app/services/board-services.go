@@ -1,6 +1,10 @@
 package services
 
-import "github.com/doug-martin/goqu/v9"
+import (
+	"fmt"
+	"github.com/doug-martin/goqu/v9"
+	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/models"
+)
 
 type BoardService struct {
 	db *goqu.Database
@@ -12,4 +16,12 @@ func NewBoardService(db *goqu.Database) (*BoardService, error) {
 		db: db,
 	}
 	return service, nil
+}
+
+func (s *BoardService) ListPerson(q string) (*[]models.Person, error) {
+	var people []models.Person
+	var err = s.db.From("kanban.person").
+		Where(goqu.Ex{"name": goqu.Op{"ilike": fmt.Sprint("%", q, "%")}}).
+		ScanStructs(&people)
+	return &people, err
 }

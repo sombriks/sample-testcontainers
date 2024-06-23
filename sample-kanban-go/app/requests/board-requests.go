@@ -14,6 +14,7 @@ type BoardRequest struct {
 // NewBoardRequest - provision the request handlers for the kanban
 func NewBoardRequest(service *services.BoardService) (*BoardRequest, error) {
 	request := &BoardRequest{service: service}
+
 	return request, nil
 }
 

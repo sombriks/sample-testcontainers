@@ -24,8 +24,8 @@ func NewKanbanServer(db *goqu.Database) (*KanbanServer, error) {
 	var err error
 
 	if db == nil {
-		log.Println("db is nil, provisioning a default one")
-		db, err = configs.NewGoquDb()
+		log.Println("[WARN] db is nil, provisioning a default one")
+		db, err = configs.NewGoquDb(nil, nil)
 		if err != nil {
 			return nil, err
 		}
