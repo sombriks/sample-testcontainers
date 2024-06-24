@@ -10,6 +10,7 @@ export const cookieCheck = async (context, next) => { // Simple redirect if the 
 	if (userMaybe) {
 		return next(context);
 	}
+
 	return context.redirect('/login');
 };
 

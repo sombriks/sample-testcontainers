@@ -38,6 +38,14 @@ func (s *BoardService) FindPerson(id int64) (*models.Person, error) {
 	return &person, err
 }
 
+func (s *BoardService) ListStatus() (*[]models.Status, error) {
+	var statuses []models.Status
+	err := s.db.From("kanban.status").
+		Order(goqu.C("id").Asc()).
+		ScanStructs(&statuses)
+	return &statuses, err
+}
+
 func (s *BoardService) ListTasks(q string) (*[]models.Task, error) {
 	var tasks []models.Task
 	var err = s.db.From("kanban.task").

@@ -272,10 +272,140 @@ database engine, same dialect, same thing.
 
 ### Sample code - Echo/Goqu/Testify
 
-Testify offers setup hooks where you can provision and later release the
+[Testify][testify] offers setup hooks where you can provision and later release the
 database runtime.
 
-_some sample code_
+```go
+package services
+
+import (
+	"context"
+	"fmt"
+	"github.com/doug-martin/goqu/v9"
+	"github.com/joho/godotenv"
+	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/configs"
+	"github.com/stretchr/testify/suite"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/modules/postgres"
+	"github.com/testcontainers/testcontainers-go/wait"
+	"testing"
+	"time"
+)
+
+type ServiceTestSuit struct {
+	suite.Suite
+	ctx     context.Context
+	tc      *postgres.PostgresContainer
+	db      *goqu.Database
+	service *BoardService
+}
+
+// TestRunSuite when writing suites this is needed as a 'suite entrypoint'
+// see https://pkg.go.dev/github.com/stretchr/testify/suite
+func TestRunSuite(t *testing.T) {
+	suite.Run(t, new(ServiceTestSuit))
+}
+
+func (s *ServiceTestSuit) SetupSuite() {
+	var err error
+	// Test execution point is inside the package, not in project root
+	_ = godotenv.Load("../../.env")
+
+	s.ctx = context.Background()
+
+	props, err := configs.NewDbProps()
+	if err != nil {
+		s.Fail("Suite setup failed", err)
+	}
+	s.tc, err = postgres.RunContainer(s.ctx,
+		testcontainers.WithImage("postgres:16.3-alpine3.20"),
+		postgres.WithInitScripts(fmt.Sprint("../../", props.InitScript)), // path changes due test entrypoint
+		postgres.WithUsername(props.Username),
+		postgres.WithDatabase(props.Database),
+		postgres.WithPassword(props.Password),
+		testcontainers.WithWaitStrategy(wait.
+			ForLog("database system is ready to accept connections").
+			WithOccurrence(2).
+			WithStartupTimeout(10*time.Second)))
+	if err != nil {
+		s.Fail("Suite setup failed", err)
+	}
+
+	dsn, err := s.tc.ConnectionString(s.ctx, fmt.Sprint("sslmode=", props.SslMode))
+	if err != nil {
+		s.Fail("Suite setup failed", err)
+	}
+
+	s.db, err = configs.NewGoquDb(nil, &dsn)
+	if err != nil {
+		s.Fail("Suite setup failed", err)
+	}
+
+	s.service, err = NewBoardService(s.db)
+	if err != nil {
+		s.Fail("Suite setup failed", err)
+	}
+
+}
+
+func (s *ServiceTestSuit) TearDownSuite() {
+	err := s.tc.Terminate(s.ctx)
+	if err != nil {
+		s.Fail("Suite tear down failed", err)
+	}
+}
+
+// the test cases
+```
+
+Similar to the advice givn on node version, mind the configuration phase! your
+code is supposed to offer reasonable defaults and proper dependency injection so
+you can provide test values or production values whenever needed:
+
+```go
+package configs
+
+import (
+	"database/sql"
+	"fmt"
+	"github.com/doug-martin/goqu/v9"
+	_ "github.com/doug-martin/goqu/v9/dialect/postgres"
+	_ "github.com/lib/pq"
+	"log"
+)
+
+// NewGoquDb - provision a query builder instance
+func NewGoquDb(d *DbProps, dsn *string) (*goqu.Database, error) {
+	var err error
+	if d == nil {
+		log.Println("[WARN] db props missing, creating a default one...")
+		d, err = NewDbProps()
+	}
+
+	// configure the query builder
+	if dsn == nil {
+		newDsn := fmt.Sprintf("postgresql://%s:%s@%s:5432/%s?sslmode=%s", //
+			d.Username, d.Password, d.Hostname, d.Database, d.SslMode)
+		dsn = &newDsn
+	} else {
+		log.Printf("[INFO] using provided dsn [%s]\n", *dsn)
+	}
+	con, err := sql.Open("postgres", *dsn)
+	if err != nil {
+		return nil, err
+	}
+	// https://doug-martin.github.io/goqu/docs/selecting.html#scan-struct
+	goqu.SetIgnoreUntaggedFields(true)
+	db := goqu.New("postgres", con)
+	db.Logger(log.Default())
+
+	return db, nil
+}
+```
+
+The sample above is called during configuration phase to provision the query
+builder instance; it receives, however, optional parameters that allow us to set
+appropriate values for development, test or production.
 
 ## CI/CD integration
 
@@ -298,4 +428,4 @@ Happy hacking!
 [testcontainers]: https://testcontainers.com/
 [node-tc]: https://testcontainers.com/guides/getting-started-with-testcontainers-for-nodejs/
 [solid]: https://en.wikipedia.org/wiki/Dependency_inversion_principle
-
+[testify]: https://github.com/stretchr/testify

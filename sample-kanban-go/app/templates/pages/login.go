@@ -10,7 +10,8 @@ import (
 
 func Login(user *models.Person, people *[]models.Person) g.Node {
 	return layouts.MainPage(user, layouts.PageSlots{
-		Title: "Login", InBody: []g.Node{
+		Title: "Login",
+		InBody: []g.Node{
 			Div(Class("is-mobile is-centered columns"),
 				Div(Class("is-half column"),
 					Form(Class("card"),

@@ -37,7 +37,15 @@ func (r *BoardRequest) Index(c echo.Context) error {
 // BoardPage - route to provision and serve the kanban board page
 func (r *BoardRequest) BoardPage(c echo.Context) error {
 	user := getUser(c)
-	return pages.BoardPage(user).Render(c.Response().Writer)
+	statuses, err := r.service.ListStatus()
+	if err != nil {
+		return err
+	}
+	tasks, err := r.service.ListTasks("")
+	if err != nil {
+		return err
+	}
+	return pages.BoardPage(user, statuses, tasks).Render(c.Response().Writer)
 }
 
 func (r *BoardRequest) LoginPage(c echo.Context) error {

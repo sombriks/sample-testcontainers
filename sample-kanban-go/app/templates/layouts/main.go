@@ -20,6 +20,7 @@ func MainPage(user *models.Person, slots PageSlots) g.Node {
 		Head(Meta(Charset("utf-8")),
 			Meta(Name("viewport"),
 				Content("width=device-width,initial-scale=1.0,minimum-scale=0.5,maximum-scale=2.0")),
+			TitleEl(g.Text("Simple Kanban - "), g.Text(slots.Title)),
 			Link(Rel("icon"), Href("favicon.png")),
 			Link(Rel("stylesheet"), Href("bulma-1.0.0.css")),
 			Script(Type("text/javascript"), Src("htmx-2.0.0.js")),
