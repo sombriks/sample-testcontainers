@@ -72,14 +72,14 @@ func NewKanbanServer(db *goqu.Database) (*KanbanServer, error) {
 	e.GET("/table", controller.TablePage, controller.CookieCheck)
 
 	task := e.Group("/task", controller.CookieCheck)
-	task.POST("/", controller.AddTask)
+	task.POST("", controller.AddTask)
 
 	taskId := task.Group("/:id")
-	taskId.PUT("/", controller.UpdateTask)
-	taskId.DELETE("/", controller.DeleteTask)
-	taskId.DELETE("/person/:personId", controller.DeleteTask)
-	taskId.POST("/join", controller.JoinTask)
-	taskId.POST("/comments", controller.AddComent)
+	taskId.PUT("", controller.UpdateTask)
+	taskId.DELETE("", controller.DeleteTask)
+	taskId.DELETE("person/:personId", controller.DeleteTask)
+	taskId.POST("join", controller.JoinTask)
+	taskId.POST("comments", controller.AddComent)
 
 	server := &KanbanServer{
 		controller: controller,

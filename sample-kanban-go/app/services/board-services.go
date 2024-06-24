@@ -46,6 +46,17 @@ func (s *BoardService) ListStatus() (*[]models.Status, error) {
 	return &statuses, err
 }
 
+func (s *BoardService) FindStatus(id int64) (*models.Status, error) {
+	var status models.Status
+	ok, err := s.db.From("kanban.status").
+		Where(goqu.C("id").Eq(id)).
+		ScanStruct(&status)
+	if !ok {
+		return nil, errors.New(fmt.Sprint("Status #", id, " not found"))
+	}
+	return &status, err
+}
+
 func (s *BoardService) ListTasks(q string) (*[]models.Task, error) {
 	var tasks []models.Task
 	var err = s.db.From("kanban.task").
@@ -63,4 +74,16 @@ func (s *BoardService) FindTask(id int64) (*models.Task, error) {
 		return nil, errors.New(fmt.Sprint("Task #", id, " not found"))
 	}
 	return &task, err
+}
+
+func (s *BoardService) InsertTask(task *models.Task) (*models.Task, error) {
+	ok, err := s.db.Insert("kanban.task").
+		Rows(task).
+		Returning("*").
+		Executor().
+		ScanStruct(task)
+	if !ok {
+		return nil, errors.New("failed to insert task")
+	}
+	return task, err
 }

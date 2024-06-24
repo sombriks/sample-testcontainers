@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/models"
 	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/services"
+	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/templates/components"
 	"github.com/sombriks/sample-testcontainers/sample-kanban-go/app/templates/pages"
 	"log"
 	"net/http"
@@ -102,8 +103,28 @@ func (r *BoardRequest) TablePage(c echo.Context) error {
 }
 
 func (r *BoardRequest) AddTask(c echo.Context) error {
-
-	return c.HTML(200, "ok - table")
+	user := getUser(c)
+	var statusId int64 = 0
+	fmt.Sscan(c.FormValue("status"), &statusId)
+	description := ""
+	fmt.Sscan(c.FormValue("description"), &description)
+	result, err := r.service.InsertTask(&models.Task{
+		Description: description,
+		StatusId:    statusId,
+	})
+	log.Printf("inserted task: %v\n", result)
+	if err != nil {
+		return err
+	}
+	status, err := r.service.FindStatus(statusId)
+	if err != nil {
+		return err
+	}
+	tasks, err := r.service.ListTasks("")
+	if err != nil {
+		return err
+	}
+	return components.CategoryLanes(user, status, tasks).Render(c.Response().Writer)
 }
 
 func (r *BoardRequest) UpdateTask(c echo.Context) error {
