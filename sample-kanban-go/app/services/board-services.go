@@ -56,6 +56,18 @@ func (s *BoardService) FindStatus(id int64) (*models.Status, error) {
 	}
 	return &status, err
 }
+func (s *BoardService) FindStatusByTaskId(id int64) (*models.Status, error) {
+	var status models.Status
+	ok, err := s.db.From("kanban.status").
+		Where(goqu.C("id").Eq(s.db.From("kanban.task").
+			Select(goqu.C("status_id")).
+			Where(goqu.C("id").Eq(id)))).
+		ScanStruct(&status)
+	if !ok {
+		return nil, errors.New(fmt.Sprint("status for task #", id, " not found"))
+	}
+	return &status, err
+}
 
 func (s *BoardService) ListTasks(q string) (*[]models.Task, error) {
 	var tasks []models.Task
@@ -86,4 +98,20 @@ func (s *BoardService) InsertTask(task *models.Task) (*models.Task, error) {
 		return nil, errors.New("failed to insert task")
 	}
 	return task, err
+}
+
+func (s *BoardService) UpdateTask(id int64, task *models.Task) (*models.Task, error) {
+	task.Id = id
+	_, err := s.db.Update("kanban.task").
+		Set(*task).Where(goqu.C("id").Eq(id)).Executor().Exec()
+	return task, err
+}
+
+func (s *BoardService) DeleteTask(id int64) (int64, error) {
+	result, err := s.db.Delete("kanban.task").
+		Where(goqu.C("id").Eq(id)).
+		Executor().
+		Exec()
+	affected, err := result.RowsAffected()
+	return affected, err
 }

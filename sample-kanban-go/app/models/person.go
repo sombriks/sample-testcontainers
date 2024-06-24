@@ -7,9 +7,9 @@ import (
 )
 
 type Person struct {
-	Id      int64     `db:"id"`
-	Name    string    `db:"name"`
-	Created time.Time `db:"created" goqu:"omitnil"`
+	Id      int64      `db:"id" goqu:"skipinsert"`
+	Name    string     `db:"name"`
+	Created *time.Time `db:"created" goqu:"omitnil"`
 }
 
 func UserFromCookie(cookie string) *Person {

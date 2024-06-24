@@ -6,7 +6,8 @@ article.message.task(
     hx-trigger="put-task"
     id="task" + task.id
     data-task=task.id
-    data-status=0
+    data-description=task.description
+    data-status=task.status.id
     hx-put=`task/${task.id}`
     @dragstart="e => e.dataTransfer.setData('text/plain', $el.id)"
     @update-status.window=`e => {

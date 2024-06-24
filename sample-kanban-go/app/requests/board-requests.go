@@ -128,13 +128,48 @@ func (r *BoardRequest) AddTask(c echo.Context) error {
 }
 
 func (r *BoardRequest) UpdateTask(c echo.Context) error {
-
-	return c.HTML(200, "ok - table")
+	user := getUser(c)
+	var taskId int64 = 0
+	var statusId int64 = 0
+	fmt.Sscan(c.Param("id"), &taskId)
+	fmt.Sscan(c.FormValue("status"), &statusId)
+	_, err := r.service.UpdateTask(taskId, &models.Task{
+		Description: c.FormValue("description"),
+		StatusId:    statusId,
+	})
+	if err != nil {
+		return err
+	}
+	status, err := r.service.FindStatus(statusId)
+	if err != nil {
+		return err
+	}
+	task, err := r.service.FindTask(taskId)
+	if err != nil {
+		return err
+	}
+	log.Printf("[INFO] updated task %v\n", task)
+	return components.TaskCard(user, status, task).Render(c.Response().Writer)
 }
 
 func (r *BoardRequest) DeleteTask(c echo.Context) error {
-
-	return c.HTML(200, "ok - table")
+	user := getUser(c)
+	var taskId int64 = 0
+	fmt.Sscan(c.Param("id"), &taskId)
+	status, err := r.service.FindStatusByTaskId(taskId)
+	if err != nil {
+		return err
+	}
+	affected, err := r.service.DeleteTask(taskId)
+	if err != nil {
+		return err
+	}
+	tasks, err := r.service.ListTasks("")
+	if err != nil {
+		return err
+	}
+	log.Println("[INFO] ", affected, " rows affected")
+	return components.CategoryLanes(user, status, tasks).Render(c.Response().Writer)
 }
 
 func (r *BoardRequest) JoinTask(c echo.Context) error {
