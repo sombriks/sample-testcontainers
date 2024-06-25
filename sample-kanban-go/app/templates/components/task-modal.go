@@ -71,7 +71,7 @@ func TaskModal(user *models.Person, status *models.Status, task *models.Task) g.
 				Div(Class("column"),
 					TaskMembers(user, task),
 					Hr(),
-					TaskComments(),
+					TaskComments(user, task),
 				),
 			),
 		),

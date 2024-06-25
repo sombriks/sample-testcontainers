@@ -191,7 +191,7 @@ func (r *BoardRequest) RemovePerson(c echo.Context) error {
 
 func (r *BoardRequest) JoinTask(c echo.Context) error {
 	user := getUser(c)
-	var taskId int64 = 0
+	var taskId int64
 	fmt.Sscan(c.Param("id"), &taskId)
 	err := r.service.JoinTask(taskId, user.Id)
 	if err != nil {
@@ -205,6 +205,17 @@ func (r *BoardRequest) JoinTask(c echo.Context) error {
 }
 
 func (r *BoardRequest) AddComment(c echo.Context) error {
-
-	return c.HTML(200, "ok - table")
+	user := getUser(c)
+	var taskId int64 = 0
+	fmt.Sscan(c.Param("id"), &taskId)
+	var content = c.FormValue("content")
+	err := r.service.AddComment(taskId, user.Id, content)
+	if err != nil {
+		return err
+	}
+	task, err := r.service.FindTask(taskId)
+	if err != nil {
+		return err
+	}
+	return components.TaskComments(user, task).Render(c.Response().Writer)
 }

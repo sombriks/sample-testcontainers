@@ -19,11 +19,18 @@ func NewBoardService(db *goqu.Database) (*BoardService, error) {
 	return service, nil
 }
 
+func (s *BoardService) hydrateMessage(message *models.Message) {
+	message.Person, _ = s.FindPerson(message.PersonId)
+}
+
 func (s *BoardService) ListMessagesByTaskId(id int64) (*[]models.Message, error) {
 	var messages []models.Message
 	var err = s.db.From("kanban.message").
 		Where(goqu.C("task_id").Eq(id)).
 		ScanStructs(&messages)
+	for i := range messages {
+		s.hydrateMessage(&messages[i])
+	}
 	return &messages, err
 }
 
@@ -104,6 +111,7 @@ func (s *BoardService) hydrateTask(task *models.Task) {
 	task.Status, _ = s.FindStatus(task.StatusId)
 	task.People, _ = s.ListPeopleByTaskId(task.Id)
 	task.Messages, _ = s.ListMessagesByTaskId(task.Id)
+
 }
 
 func (s *BoardService) FindTask(id int64) (*models.Task, error) {
@@ -157,6 +165,17 @@ func (s *BoardService) JoinTask(taskId int64, personId int64) error {
 	_, err := s.db.Insert("kanban.task_person").
 		Cols("task_id", "person_id").
 		Vals([]interface{}{taskId, personId}).
+		Executor().Exec()
+	return err
+}
+
+func (s *BoardService) AddComment(taskId int64, personId int64, content string) error {
+	_, err := s.db.Insert("kanban.message").
+		Rows(&models.Message{
+			PersonId: personId,
+			Content:  content,
+			TaskId:   taskId,
+		}).
 		Executor().Exec()
 	return err
 }
