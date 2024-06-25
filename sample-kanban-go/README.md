@@ -69,8 +69,10 @@ go run main.go
   just like we did on node project, it's up to us solve the select [N+1][n+1]
   cases, which affects mainly the `task` and `message` models.
 - Unlike other two projects, the template language isn't a markup language but
-  golang itself. The [gomponents][gomponents] library isn't exactly a new idea
-  but looks funny see how it goes in this exercise.
+  golang itself. The [gomponents][gomponents] library isn't exactly a new idea,
+  but looks funny see how it goes in this exercise. For instance, more type
+  safety, richer helper functions and the ability to plan a breakpoint in the
+  middle of the template are big and welcome benfits.
 - Another discrepancy of this implementation is the use of static resources to
   serve unversioned frontend libraries. In jvm version there where
   [webjars][webjars], in node version we served versioned libraries directly
@@ -81,6 +83,8 @@ go run main.go
   projects that [nodemon][nodemon] delivers on node projects. It's completely
   optional and independent of project dependencies but it worth the
   configuration effort.
+- Quick reminder that [go's range iterating over slices][range] returns the
+  index and a **value**, not a _reference_ to the element being iterated.
 
 [testcontainers]: https://testcontainers.com/
 [go]: https://go.dev/
@@ -105,3 +109,4 @@ go run main.go
 [webjars]: https://www.webjars.org/
 [node_modules]: https://docs.npmjs.com/cli/v7/configuring-npm/folders#node-modules
 [nodemon]: https://nodemon.io/
+[range]: https://gobyexample.com/range

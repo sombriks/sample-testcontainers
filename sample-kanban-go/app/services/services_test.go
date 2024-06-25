@@ -101,3 +101,23 @@ func (s *ServiceTestSuit) TestShouldFindTask() {
 	s.Equal("design", task.Description)
 	s.Equal(int64(2), task.StatusId)
 }
+
+func (s *ServiceTestSuit) TestShouldFindTaskWithMessageAndPerson() {
+	task, err := s.service.FindTask(4)
+	s.Nil(err)
+	s.Equal("feature listing", task.Description)
+	s.Equal(int64(3), task.StatusId)
+	s.NotNil(task.Status)
+	s.NotNil(task.Messages)
+	s.NotNil(task.People)
+}
+
+func (s *ServiceTestSuit) TestShouldListTaskWithMessageAndPerson() {
+	tasks, err := s.service.ListTasks("feature listing")
+	s.Nil(err)
+	s.Equal("feature listing", (*tasks)[0].Description)
+	s.Equal(int64(3), (*tasks)[0].StatusId)
+	s.NotNil((*tasks)[0].Status)
+	s.NotNil((*tasks)[0].Messages)
+	s.NotNil((*tasks)[0].People)
+}

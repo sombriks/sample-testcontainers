@@ -19,10 +19,29 @@ func NewBoardService(db *goqu.Database) (*BoardService, error) {
 	return service, nil
 }
 
+func (s *BoardService) ListMessagesByTaskId(id int64) (*[]models.Message, error) {
+	var messages []models.Message
+	var err = s.db.From("kanban.message").
+		Where(goqu.C("task_id").Eq(id)).
+		ScanStructs(&messages)
+	return &messages, err
+}
+
 func (s *BoardService) ListPeople(q string) (*[]models.Person, error) {
 	var people []models.Person
 	var err = s.db.From("kanban.person").
 		Where(goqu.Ex{"name": goqu.Op{"ilike": fmt.Sprint("%", q, "%")}}).
+		ScanStructs(&people)
+	return &people, err
+}
+
+func (s *BoardService) ListPeopleByTaskId(id int64) (*[]models.Person, error) {
+	var people []models.Person
+	var err = s.db.From("kanban.person").
+		Where(goqu.C("id").
+			In(s.db.From("kanban.task_person").
+				Select("person_id").
+				Where(goqu.C("task_id").Eq(id)))).
 		ScanStructs(&people)
 	return &people, err
 }
@@ -73,8 +92,18 @@ func (s *BoardService) ListTasks(q string) (*[]models.Task, error) {
 	var tasks []models.Task
 	var err = s.db.From("kanban.task").
 		Where(goqu.C("description").ILike(fmt.Sprint("%", q, "%"))).
+		Order(goqu.C("id").Asc()).
 		ScanStructs(&tasks)
+	for i := range tasks { // https://gobyexample.com/range (beware, values, not references!)
+		s.hydrateTask(&tasks[i])
+	}
 	return &tasks, err
+}
+
+func (s *BoardService) hydrateTask(task *models.Task) {
+	task.Status, _ = s.FindStatus(task.StatusId)
+	task.People, _ = s.ListPeopleByTaskId(task.Id)
+	task.Messages, _ = s.ListMessagesByTaskId(task.Id)
 }
 
 func (s *BoardService) FindTask(id int64) (*models.Task, error) {
@@ -85,6 +114,7 @@ func (s *BoardService) FindTask(id int64) (*models.Task, error) {
 	if !ok {
 		return nil, errors.New(fmt.Sprint("Task #", id, " not found"))
 	}
+	s.hydrateTask(&task)
 	return &task, err
 }
 
@@ -114,4 +144,19 @@ func (s *BoardService) DeleteTask(id int64) (int64, error) {
 		Exec()
 	affected, err := result.RowsAffected()
 	return affected, err
+}
+
+func (s *BoardService) RemovePerson(taskId int64, personId int64) error {
+	_, err := s.db.Delete("kanban.task_person").Where(goqu.Ex{
+		"person_id": personId, "task_id": taskId,
+	}).Executor().Exec()
+	return err
+}
+
+func (s *BoardService) JoinTask(taskId int64, personId int64) error {
+	_, err := s.db.Insert("kanban.task_person").
+		Cols("task_id", "person_id").
+		Vals([]interface{}{taskId, personId}).
+		Executor().Exec()
+	return err
 }

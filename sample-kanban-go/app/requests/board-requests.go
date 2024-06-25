@@ -172,12 +172,39 @@ func (r *BoardRequest) DeleteTask(c echo.Context) error {
 	return components.CategoryLanes(user, status, tasks).Render(c.Response().Writer)
 }
 
-func (r *BoardRequest) JoinTask(c echo.Context) error {
-
-	return c.HTML(200, "ok - table")
+func (r *BoardRequest) RemovePerson(c echo.Context) error {
+	user := getUser(c)
+	var taskId int64 = 0
+	fmt.Sscan(c.Param("id"), &taskId)
+	var personId int64 = 0
+	fmt.Sscan(c.Param("personId"), &personId)
+	err := r.service.RemovePerson(taskId, personId)
+	if err != nil {
+		return err
+	}
+	task, err := r.service.FindTask(taskId)
+	if err != nil {
+		return err
+	}
+	return components.TaskMembers(user, task).Render(c.Response().Writer)
 }
 
-func (r *BoardRequest) AddComent(c echo.Context) error {
+func (r *BoardRequest) JoinTask(c echo.Context) error {
+	user := getUser(c)
+	var taskId int64 = 0
+	fmt.Sscan(c.Param("id"), &taskId)
+	err := r.service.JoinTask(taskId, user.Id)
+	if err != nil {
+		return err
+	}
+	task, err := r.service.FindTask(taskId)
+	if err != nil {
+		return err
+	}
+	return components.TaskMembers(user, task).Render(c.Response().Writer)
+}
+
+func (r *BoardRequest) AddComment(c echo.Context) error {
 
 	return c.HTML(200, "ok - table")
 }

@@ -31,9 +31,9 @@ func TaskCard(user *models.Person, status *models.Status, task *models.Task) g.N
 		Div(Class("message-body is-flex is-justify-content-space-between is-align-content-center"),
 			Span(Class("icon-text"),
 				Span(Class("icon"), g.El("ion-icon", Name("chatbox-ellipses-outline"))),
-				Span(g.Text("0")), // len(task.Messages)
+				Span(g.Text(fmt.Sprint(task.SafeMessageCount()))),
 				Span(Class("icon"), g.El("ion-icon", Name("people-circle-outline"))),
-				Span(g.Text("0")), // len(task.People)
+				Span(g.Text(fmt.Sprint(task.SafePeopleCount()))),
 			),
 			Button(Class("button"),
 				Span(Class("icon"), g.El("ion-icon", Name("information-circle-outline"))),

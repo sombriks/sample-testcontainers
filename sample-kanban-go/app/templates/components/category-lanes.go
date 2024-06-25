@@ -25,11 +25,7 @@ func CategoryLanes(user *models.Person, status *models.Status, tasks *[]models.T
 				 }`),
 				// tasks var came as parameter
 				g.Group(g.Map(*tasks, func(task models.Task) g.Node {
-					if task.StatusId == status.Id {
-						return TaskCard(user, status, &task)
-					} else {
-						return g.Raw("")
-					}
+					return g.If(task.StatusId == status.Id, TaskCard(user, status, &task))
 				})),
 			),
 			Div(Class("card-footer"),

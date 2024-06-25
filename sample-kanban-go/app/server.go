@@ -77,9 +77,9 @@ func NewKanbanServer(db *goqu.Database) (*KanbanServer, error) {
 	taskId := task.Group("/:id")
 	taskId.PUT("", controller.UpdateTask)
 	taskId.DELETE("", controller.DeleteTask)
-	taskId.DELETE("person/:personId", controller.DeleteTask)
-	taskId.POST("join", controller.JoinTask)
-	taskId.POST("comments", controller.AddComent)
+	taskId.DELETE("/person/:personId", controller.RemovePerson)
+	taskId.POST("/join", controller.JoinTask)
+	taskId.POST("/comments", controller.AddComment)
 
 	server := &KanbanServer{
 		controller: controller,

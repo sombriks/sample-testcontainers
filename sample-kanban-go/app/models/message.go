@@ -7,5 +7,5 @@ type Message struct {
 	PersonId int64      `db:"person_id"`
 	TaskId   int64      `db:"task_id"`
 	Content  string     `db:"content"`
-	Created  *time.Time `db:"created" goqu:"omitnil"`
+	Created  *time.Time `db:"created" goqu:"omitnil,skipupdate"`
 }

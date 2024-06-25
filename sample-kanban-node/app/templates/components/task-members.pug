@@ -4,7 +4,7 @@ div(id="task-members-" + task.id)
       each person in task.people
           .control
               .tags.has-addons
-                  span.tag(class= person.id == user.id ? 'tag is-primary' : 'tag')= person.name
+                  span.tag(class=(person.id == user.id ? 'tag is-primary' : 'tag'))= person.name
                   span.tag.is-delete(
                       hx-swap="outerHTML"
                       hx-confirm="Are you sure?"
