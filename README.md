@@ -2,6 +2,10 @@
 
 Samples on why and how to use [TestContainers][testcontainers]
 
+[![GO CI](https://github.com/sombriks/sample-testcontainers/actions/workflows/go.yml/badge.svg)](https://github.com/sombriks/sample-testcontainers/actions/workflows/go.yml)
+[![JVM CI](https://github.com/sombriks/sample-testcontainers/actions/workflows/jvm.yml/badge.svg)](https://github.com/sombriks/sample-testcontainers/actions/workflows/jvm.yml)
+[![Node CI](https://github.com/sombriks/sample-testcontainers/actions/workflows/node.yml/badge.svg)](https://github.com/sombriks/sample-testcontainers/actions/workflows/node.yml)
+
 ## Test Boundaries
 
 Untested code is a dark jungle filled with unknown bugs. 
