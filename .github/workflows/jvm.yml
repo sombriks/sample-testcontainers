@@ -16,4 +16,4 @@ jobs:
         with:
          distribution: oracle
          java-version: 17
-      - run: ./gradlew built bootJar
+      - run: ./gradlew build bootJar

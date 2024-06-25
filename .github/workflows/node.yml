@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 defaults:
   run:
-    working-directory: sample-kanban-node
+    working-directory: ./sample-kanban-node
 jobs:
   run-tests:
     runs-on: ubuntu-latest
@@ -14,6 +14,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version-file: ./package.json
+          node-version-file: ./sample-kanban-node/package.json
       - run: npm ci
       - run: npm run test
