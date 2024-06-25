@@ -49,9 +49,8 @@ Or:
   for the database using the regular configuration instead of the TestContainer.
 - Mockito still present issues with kotlin. The `mockito-kotlin` dependency is
   there just to solve that.
-- The [layout dialect for thymeleaf][layout]
-  delivers important feature on view design which, in my opinion, should be part
-  of the main thing.
+- The [layout dialect for thymeleaf][layout] delivers important feature on view
+- design which, in my opinion, should be part of the main thing.
 - On the other hand, whenever a development error happens, (i.e. forgot to feed
   proper data in spring mvc model), thymeleaf fails to deliver the correct
   faulty template name, lost itself in the include maze that can form very
