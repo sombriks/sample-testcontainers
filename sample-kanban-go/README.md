@@ -55,7 +55,7 @@ go run main.go
 - The project structure is [not idiomatic to go][go-project-structure] but
   follows [SOLID][solid] standards as much as possible. It's a deliberate choice
   because go documented recommendation is a bad design and can lead quickly to
-  mental fatigue.
+  mental fatigue. In fact [i blame Rob Pike][because] for this.
 - Thanks to [godotenv][godotenv], we have an environment-aware configuration
   strategy almost as flexible as the jvm version.
 - GO packages are very different from classpath or node ESM/CJS. For instance,
@@ -72,12 +72,12 @@ go run main.go
   golang itself. The [gomponents][gomponents] library isn't exactly a new idea,
   but looks funny see how it goes in this exercise. For instance, more type
   safety, richer helper functions and the ability to plan a breakpoint in the
-  middle of the template are big and welcome benfits.
+  middle of the template are big and welcome benefits.
 - Another discrepancy of this implementation is the use of static resources to
   serve unversioned frontend libraries. In jvm version there where
   [webjars][webjars], in node version we served versioned libraries directly
-  from [node_modules][node_modules, nothing similar is available for go projects
-  by the time of this writing.
+  from [node_modules][node_modules], but nothing similar is available for go
+  projects by the time of this writing.
 - Note that `//go:embed static` and `// go:embed static` are not the same thing.
 - There is a tool called [air][air] that delivers similar experience on go
   projects that [nodemon][nodemon] delivers on node projects. It's completely
@@ -110,3 +110,4 @@ go run main.go
 [node_modules]: https://docs.npmjs.com/cli/v7/configuring-npm/folders#node-modules
 [nodemon]: https://nodemon.io/
 [range]: https://gobyexample.com/range
+[because]: https://github.com/robpike/filter
