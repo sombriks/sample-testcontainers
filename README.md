@@ -6,6 +6,10 @@ Samples on why and how to use [TestContainers][testcontainers]
 [![JVM CI](https://github.com/sombriks/sample-testcontainers/actions/workflows/jvm.yml/badge.svg)](https://github.com/sombriks/sample-testcontainers/actions/workflows/jvm.yml)
 [![Node CI](https://github.com/sombriks/sample-testcontainers/actions/workflows/node.yml/badge.svg)](https://github.com/sombriks/sample-testcontainers/actions/workflows/node.yml)
 
+<video width="320" height="240" controls>
+  <source src="./docs/sample-kanban-2024-06-25-11-16-07.mp4" type="video/mp4">
+</video>
+
 ## Test Boundaries
 
 Untested code is a dark jungle filled with unknown bugs. 
