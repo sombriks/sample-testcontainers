@@ -15,11 +15,21 @@ purposes using [TestContainers][testcontainers]
 - [alpine.js 3.14][alpinejs]
 - [testify 1.9][testify]
 - [godotenv 1.5][godotenv] to simplify configuration
+- a recent version of [npm][npm]
 - and of course [testcontainers for go][go-testcontainers]
 
 Make sure you have $HOME/go/bin in your $PATH.
 
 ## How to build
+
+You need npm deps to be installed at least once:
+
+```bash
+cd app/static
+npm i
+```
+
+Then go with a regular golang build:
 
 ```bash
 go build .
@@ -77,7 +87,8 @@ go run main.go
   serve unversioned frontend libraries. In jvm version there where
   [webjars][webjars], in node version we served versioned libraries directly
   from [node_modules][node_modules], but nothing similar is available for go
-  projects by the time of this writing.
+  projects by the time of this writing. A minimal node project was provisioned
+  inside the static folder.
 - Note that `//go:embed static` and `// go:embed static` are not the same thing.
 - There is a tool called [air][air] that delivers similar experience on go
   projects that [nodemon][nodemon] delivers on node projects. It's completely
@@ -111,3 +122,4 @@ go run main.go
 [nodemon]: https://nodemon.io/
 [range]: https://gobyexample.com/range
 [because]: https://github.com/robpike/filter
+[npm]: https://npmjs.org
